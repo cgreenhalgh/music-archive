@@ -11,6 +11,7 @@ import { WorkExplorerComponent } from './work-explorer.component';
 import { PerformanceDetailComponent } from './performance-detail.component';
 import { PartsMapComponent } from './parts-map.component';
 import { RecordsService } from './records.service';
+import { LinkappsService } from './linkapps.service';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -30,7 +31,7 @@ import { AppRoutingModule } from './app-routing.module';
     HttpModule,
     NgbModule.forRoot()
   ],
-  providers: [RecordsService],
+  providers: [RecordsService, LinkappsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

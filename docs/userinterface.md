@@ -24,6 +24,18 @@ Various options:
 - attended demo "stand", e.g. for public presentations
 - unattended demo stand
 
+### Adapt(ed) listening experience
+
+Specify device(s), view(s), mode (e.g. linear, user guided), performance(s)/part(s). 
+Then "generate" e.g. template or "experience".
+Then "play" / listen.
+
+Implies:
+- (something like) accounts, or at least sessions
+- (something like) playlist
+- flexible playback options
+- authoring vs delivery/playback modes
+
 ## Mobile app view
 
 Mobile app UI should repond to:

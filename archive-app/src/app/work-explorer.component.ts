@@ -6,6 +6,7 @@ import { Renderer2 } from '@angular/core';
 
 import { Entity } from './entity';
 import { RecordsService }  from './records.service';
+import { LinkappsService } from './linkapps.service';
 
 class ScreenEntity extends Entity {
 	selected:boolean = false;
@@ -162,7 +163,8 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private location: Location,
     private renderer: Renderer2,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private linkappsService: LinkappsService
   ) {}
 
   ngOnInit(): void {
