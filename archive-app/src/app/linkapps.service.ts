@@ -8,7 +8,7 @@ export class LinkappsService {
 
       
     let app = window.open('http://localhost:8080/1/archive-muzivisual/', 'archive-muzivisual');
-
+/*
     // Create peer connections and add behavior.
     let peerConnection = new RTCPeerConnection({iceServers:[]});
     console.log('Created peer connection object.');
@@ -57,7 +57,7 @@ export class LinkappsService {
     
     // single fixed id and name (=[out of band] negotiated)
     // Note: typescript error unknown createDataChannel
-    let channel = (peerConnection as any).createDataChannel('linkapps', {ordered:true/*, negotiated:true, id:123*/})
+    let channel = (peerConnection as any).createDataChannel('linkapps', {ordered:true})//, negotiated:true, id:123
     channel.onopen = function(event) {
       console.log('channel open');
       channel.send('Hi you 2!');
@@ -76,8 +76,6 @@ export class LinkappsService {
     }, function(err) {
       console.log('error creating offer', err);
     });
-
-      
-   
+*/
   }
 }
