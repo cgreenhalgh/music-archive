@@ -47,11 +47,11 @@ Archive app should not log.
 
 ### implmentation ideas
 
-WebRTC?!
+WebRTC?! Needs bootstrapping via bi-directional channel. E.g. window messages (same machine), socket.io, ... So i'll just start with those for now.
 
 muzivisual app (mvapp) served from separate URL (same server for initial same origin tests on single machine).
 
-mvapp connects to archive via WebRTC. Session information exchange via archive opening mvapp (same machine) or via other server coordination TBC.
+mvapp connects to archive via data channel (via archive opening mvapp (same machine) or via other server coordination TBC).
 
 mvapp sends hello to archive.
 

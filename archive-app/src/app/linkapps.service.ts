@@ -3,11 +3,28 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class LinkappsService {
-  constructor() {
-    console.log('created LinkappsService')
+	app:Window;
 
-      
-    let app = window.open('http://localhost:8080/1/archive-muzivisual/', 'archive-muzivisual');
+	constructor() {
+		console.log('created LinkappsService')
+		window.addEventListener('message', (ev) => this.onMessage(ev))
+	}
+	onMessage(ev:Event) {
+		console.log('window message: '+ev.data)
+		if (typeof ev.data =='string') {
+			let msg = JSON.parse(ev.data)
+			if ('mrl-music.archive/1.0'!=msg.version) {
+				console.log('ignore window message with no/wrong version: '+ev.data)
+				return
+			}
+			// TODO
+		}
+	}
+	openApp():void {
+		console.log('open app window')
+		app = window.open('http://localhost:8080/1/archive-muzivisual/', 'archive-muzivisual');
+	}
+
 /*
     // Create peer connections and add behavior.
     let peerConnection = new RTCPeerConnection({iceServers:[]});
@@ -77,5 +94,4 @@ export class LinkappsService {
       console.log('error creating offer', err);
     });
 */
-  }
 }
