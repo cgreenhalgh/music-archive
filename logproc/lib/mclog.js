@@ -90,7 +90,7 @@ module.exports.read = function( path ) {
 				if (entry.info.title && entry.info.code && currentPerformance) {
 					var code = {id: entry.info.title, time: entry.time, datetime: entry.datetime};
 					currentPerformance.codes.push(code);
-					currentPerformance.stages[performance.stages.length-1].codes.push(code);
+					currentPerformance.stages[currentPerformance.stages.length-1].codes.push(code);
 				}
 			} else if ('midi.note'==entry.event) {
 				// like {"localTime":1495029177971,"note":"E4","midinote":64,"freq":329.59534665249885,"velocity":127,"off":false}

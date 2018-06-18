@@ -52,6 +52,12 @@ MIDI files of notes
 node lib/log2midi.js test/data/20170608T112725862Z-default.log
 ```
 
+## Codes triggered
+
+```
+node lib/logs2codes.js output/codes_triggered.csv output/mkGameEngine.xlsx output/climb-performances-20170608.json output/musichub-performances.json logs/20170608T112725862Z-default.log ...
+```
+
 ## Online
 
 Configure log processing server (just processes musicodes logs to performances).
