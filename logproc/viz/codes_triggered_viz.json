@@ -1,0 +1,1112 @@
+{
+    "performances": [
+        {
+            "id": "9333e7a2-16a9-4352-a45a-f6f42d848cde",
+            "title": "Dress rehearsal of Climb!"
+        },
+        {
+            "id": "be418821-436d-41c2-880c-058dffb57d91",
+            "title": "Premiere performance of Climb!"
+        },
+        {
+            "id": "13a7fa70-ae91-4541-9526-fd3b332b585d",
+            "title": "Second performance of Climb!"
+        },
+        {
+            "id": "20180119-allyourbass1",
+            "title": "Climb! at All Your Bass"
+        },
+        {
+            "id": "20180119-allyourbass2",
+            "title": "Climb! at All Your Bass (2)"
+        },
+        {
+            "id": "20180221-rcc-1",
+            "title": "Climb! at RCC 2018 (1)"
+        },
+        {
+            "id": "20180221-rcc-2",
+            "title": "Climb! at RCC 2018 (2)"
+        },
+        {
+            "id": "20180614-finland-1",
+            "title": "Climb! in Finland (1)"
+        },
+        {
+            "id": "20180614-finland-2",
+            "title": "Climb! in Finland (2)"
+        }
+    ],
+    "stages": [
+        {
+            "id": "3a",
+            "path": 0,
+            "level": 5,
+            "codes": [],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "p1c",
+                "20180119-allyourbass1": "p1c",
+                "20180221-rcc-1": "p1c",
+                "20180221-rcc-2": "p1c",
+                "20180614-finland-1": "p1c",
+                "20180614-finland-2": "p1c"
+            }
+        },
+        {
+            "id": "basecamp",
+            "path": 1,
+            "level": 0,
+            "codes": [
+                 {
+                    "id": "BC_SP",
+                    "measure": 6,
+                    "type": "approach",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": false
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": false
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": false
+                        },
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 47.916000000000004
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 35.32
+                        },
+                        "20180221-rcc-1": {
+                            "played": true,
+                            "time_in_stage": 33.357
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 32.938
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 30.466
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 28.927
+                        }
+                    }
+                },
+                {
+                    "id": "BC_Ending1",
+                    "measure": "Ending 1",
+                    "type": "choice",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": false
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": true,
+                            "time_in_stage": 47.488
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": false
+                        },
+                        "20180119-allyourbass1": {
+                            "played": false
+                        },
+                        "20180119-allyourbass2": {
+                            "played": false
+                        },
+                        "20180221-rcc-1": {
+                            "played": false
+                        },
+                        "20180221-rcc-2": {
+                            "played": false
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 51.821
+                        },
+                        "20180614-finland-2": {
+                            "played": false
+                        }
+                    }
+                },
+                {
+                    "id": "BC_Ending2",
+                    "measure": "Ending 2,12",
+                    "type": "choice",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 50.556000000000004
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": false
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": true,
+                            "time_in_stage": 52.035000000000004
+                        },
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 69.184
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 52.485
+                        },
+                        "20180221-rcc-1": {
+                            "played": false
+                        },
+                        "20180221-rcc-2": {
+                            "played": false
+                        },
+                        "20180614-finland-1": {
+                            "played": false
+                        },
+                        "20180614-finland-2": {
+                            "played": false
+                        }
+                    }
+                },
+                {
+                    "id": "BC_Ending3",
+                    "measure": "Ending 3",
+                    "type": "choice",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": false
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": false
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": false
+                        },
+                        "20180119-allyourbass1": {
+                            "played": false
+                        },
+                        "20180119-allyourbass2": {
+                            "played": false
+                        },
+                        "20180221-rcc-1": {
+                            "played": false
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 41.268
+                        },
+                        "20180614-finland-1": {
+                            "played": false
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 55.68
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "1b",
+                "be418821-436d-41c2-880c-058dffb57d91": "1a",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "1b",
+                "20180119-allyourbass1": "1b",
+                "20180119-allyourbass2": "1b",
+                "20180221-rcc-1": "1a",
+                "20180221-rcc-2": "1c",
+                "20180614-finland-1": "1a",
+                "20180614-finland-2": "1c"
+            }
+        },
+        {
+            "id": "1b",
+            "path": 1,
+            "level": 1,
+            "codes": [
+                {
+                    "id": "1b",
+                    "measure": "10",
+                    "type": "challenge",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 32.813
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": true,
+                            "time_in_stage": 31.201
+                        },
+                        "20180119-allyourbass1": {
+                            "played": false
+                        },
+                        "20180119-allyourbass2": {
+                            "played": false
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "p2a",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "p2a",
+                "20180119-allyourbass1": "1c",
+                "20180119-allyourbass2": "1c"
+            }
+        },
+        {
+            "id": "1c",
+            "path": 2,
+            "level": 1,
+            "codes": [
+                {
+                    "id": "1c_1",
+                    "measure": "1",
+                    "type": "trigger",
+                    "performance_code": {
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 4.876
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 4.8260000000000005
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 3.088
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 3.92
+                        }
+                    }
+                },
+                {
+                    "id": "1c_2",
+                    "measure": 8,
+                    "type": "challenge",
+                    "performance_code": {
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 34.292
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 34.827
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 32.592
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 31.068
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "20180119-allyourbass1": "p3a",
+                "20180119-allyourbass2": "p3a",
+                "20180221-rcc-2": "p3a",
+                "20180614-finland-2": "p3a"
+            }
+        },
+        {
+            "id": "p1a",
+            "path": 0,
+            "level": 2,
+            "codes": [
+                {
+                    "id": "p1a",
+                    "measure": "8",
+                    "type": "trigger",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": false
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 34.709
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "2a",
+                "20180614-finland-1": "2a"
+            }
+        },
+        {
+            "id": "p2a",
+            "path": 1,
+            "level": 2,
+            "codes": [],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "2b",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "2b"
+            }
+        },
+        {
+            "id": "p3a",
+            "path": 2,
+            "level": 2,
+            "codes": [
+                {
+                    "id": "p3a_1",
+                    "measure": 1,
+                    "type": "trigger",
+                    "performance_code": {
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 6.691
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 5.251
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 5.593
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 5.737
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "20180119-allyourbass1": "2c",
+                "20180119-allyourbass2": "2c",
+                "20180221-rcc-2": "2c",
+                "20180614-finland-2": "2c"
+            }
+        },
+        {
+            "id": "2a",
+            "path": 0,
+            "level": 3,
+            "codes": [
+                {
+                    "id": "2a",
+                    "measure": "19",
+                    "type": "challenge",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 54.49
+                        },
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 56.189
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 57.671
+                        },
+                        "20180614-finland-1": {
+                            "played": false
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 71.032
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "p1b",
+                "20180119-allyourbass1": "p1b",
+                "20180221-rcc-2": "p1b",
+                "20180614-finland-1": "2c",
+                "20180614-finland-2": "p1b"
+            }
+        },
+        {
+            "id": "2b",
+            "path": 1,
+            "level": 3,
+            "codes": [
+                {
+                    "id": "2b_1",
+                    "measure": "5",
+                    "type": "trigger",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 23.972
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": true,
+                            "time_in_stage": 27.16
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": true,
+                            "time_in_stage": 20.045
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 27.361
+                        },
+                        "20180221-rcc-1": {
+                            "played": true,
+                            "time_in_stage": 28.192
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 24.588
+                        }
+                    }
+                },
+                {
+                    "id": "2b_2",
+                    "measure": "18",
+                    "type": "challenge",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": false
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": true,
+                            "time_in_stage": 92.834
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": true,
+                            "time_in_stage": 85.443
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 92.164
+                        },
+                        "20180221-rcc-1": {
+                            "played": true,
+                            "time_in_stage": 94.042
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 90.308
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "1a",
+                "be418821-436d-41c2-880c-058dffb57d91": "p2b",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "p2b",
+                "20180119-allyourbass2": "p2b",
+                "20180221-rcc-1": "p2b",
+                "20180614-finland-1": "p2b"
+            }
+        },
+        {
+            "id": "2c",
+            "path": 2,
+            "level": 3,
+            "codes": [
+                {
+                    "id": "2c_1",
+                    "measure": 2,
+                    "type": "trigger",
+                    "performance_code": {
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 15.364
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 9.327
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 10.615
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 10.278
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 10.003
+                        }
+                    }
+                },
+                {
+                    "id": "2c_2",
+                    "measure": 12,
+                    "type": "challenge",
+                    "performance_code": {
+                        "20180119-allyourbass1": {
+                            "played": false
+                        },
+                        "20180119-allyourbass2": {
+                            "played": false
+                        },
+                        "20180221-rcc-2": {
+                            "played": false
+                        },
+                        "20180614-finland-1": {
+                            "played": false
+                        },
+                        "20180614-finland-2": {
+                            "played": false
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "20180119-allyourbass1": "2a",
+                "20180119-allyourbass2": "2b",
+                "20180221-rcc-2": "2a",
+                "20180614-finland-1": "2b",
+                "20180614-finland-2": "2a"
+            }
+        },
+        {
+            "id": "p1b",
+            "path": 0,
+            "level": 4,
+            "codes": [
+                {
+                    "id": "p1b",
+                    "measure": "7",
+                    "type": "trigger",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": false
+                        },
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 31.237000000000002
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 39.586
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 28.811
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "3a",
+                "20180119-allyourbass1": "3a",
+                "20180221-rcc-2": "3a",
+                "20180614-finland-2": "3a"
+            }
+        },
+        {
+            "id": "p2b",
+            "path": 1,
+            "level": 4,
+            "codes": [],
+            "performance_next": {
+                "be418821-436d-41c2-880c-058dffb57d91": "3b",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "3b",
+                "20180119-allyourbass2": "3b",
+                "20180221-rcc-1": "3b",
+                "20180614-finland-1": "3b"
+            }
+        },
+        {
+            "id": "p3b",
+            "path": 2,
+            "level": 4,
+            "codes": [
+                {
+                    "id": "p3b",
+                    "measure": 1,
+                    "type": "trigger",
+                    "performance_code": {}
+                }
+            ],
+            "performance_next": {}
+        },
+        {
+            "id": "1a",
+            "path": 0,
+            "level": 1,
+            "codes": [
+                {
+                    "id": "1a_1",
+                    "measure": "4",
+                    "type": "trigger",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 12.847
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": true,
+                            "time_in_stage": 9.522
+                        },
+                        "20180221-rcc-1": {
+                            "played": true,
+                            "time_in_stage": 8.76
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 10.286
+                        }
+                    }
+                },
+                {
+                    "id": "1a_2",
+                    "measure": "12",
+                    "type": "challenge",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 26.466
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": false
+                        },
+                        "20180221-rcc-1": {
+                            "played": false
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 25.835
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "p1a",
+                "be418821-436d-41c2-880c-058dffb57d91": "2b",
+                "20180221-rcc-1": "2b",
+                "20180614-finland-1": "p1a"
+            }
+        },
+        {
+            "id": "3b",
+            "path": 1,
+            "level": 5,
+            "codes": [
+                {
+                    "id": "3b_1",
+                    "measure": 11,
+                    "type": "challenge",
+                    "performance_code": {
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": false
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": false
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 30.91
+                        },
+                        "20180221-rcc-1": {
+                            "played": false
+                        },
+                        "20180614-finland-1": {
+                            "played": false
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "be418821-436d-41c2-880c-058dffb57d91": "p2c",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "p2c",
+                "20180119-allyourbass2": "p2c",
+                "20180221-rcc-1": "3c",
+                "20180614-finland-1": "3a"
+            }
+        },
+        {
+            "id": "3c",
+            "path": 2,
+            "level": 5,
+            "codes": [
+                {
+                    "id": "3c_1",
+                    "measure": 11,
+                    "type": "challenge",
+                    "performance_code": {
+                        "20180221-rcc-1": {
+                            "played": false
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "20180221-rcc-1": "3a"
+            }
+        },
+        {
+            "id": "p1c",
+            "path": 0,
+            "level": 6,
+            "codes": [],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "4a",
+                "20180119-allyourbass1": "4a",
+                "20180221-rcc-1": "4a",
+                "20180221-rcc-2": "4a",
+                "20180614-finland-1": "4a",
+                "20180614-finland-2": "4a"
+            }
+        },
+        {
+            "id": "p2c",
+            "path": 1,
+            "level": 6,
+            "codes": [],
+            "performance_next": {
+                "be418821-436d-41c2-880c-058dffb57d91": "4b",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "4b",
+                "20180119-allyourbass2": "4b"
+            }
+        },
+        {
+            "id": "p3c",
+            "path": 2,
+            "level": 6,
+            "codes": [
+                {
+                    "id": "p3c",
+                    "measure": 1,
+                    "type": "trigger",
+                    "performance_code": {}
+                }
+            ],
+            "performance_next": {}
+        },
+        {
+            "id": "4a",
+            "path": 0,
+            "level": 7,
+            "codes": [
+                {
+                    "id": "4a_1",
+                    "measure": "1",
+                    "type": "trigger",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 8.35
+                        },
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 5.23
+                        },
+                        "20180221-rcc-1": {
+                            "played": true,
+                            "time_in_stage": 7.822
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 4.796
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 4.861
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 5.1930000000000005
+                        }
+                    }
+                },
+                {
+                    "id": "4a_2",
+                    "measure": "14",
+                    "type": "challenge",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 67.75
+                        },
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 71.967
+                        },
+                        "20180221-rcc-1": {
+                            "played": true,
+                            "time_in_stage": 70.58
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 67.013
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 67.994
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 68.063
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "5a",
+                "20180119-allyourbass1": "5a",
+                "20180221-rcc-1": "5a",
+                "20180221-rcc-2": "5a",
+                "20180614-finland-1": "5a",
+                "20180614-finland-2": "5a"
+            }
+        },
+        {
+            "id": "4b",
+            "path": 1,
+            "level": 7,
+            "codes": [
+                {
+                    "id": "4b_1",
+                    "measure": "7,8",
+                    "type": "trigger",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 25.044
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": true,
+                            "time_in_stage": 40.636
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": true,
+                            "time_in_stage": 27.484
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 21.643
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "5b",
+                "be418821-436d-41c2-880c-058dffb57d91": "5b",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "5b",
+                "20180119-allyourbass2": "5b"
+            }
+        },
+        {
+            "id": "4c",
+            "path": 2,
+            "level": 7,
+            "codes": [],
+            "performance_next": {}
+        },
+        {
+            "id": "5a",
+            "path": 0,
+            "level": 8,
+            "codes": [
+                {
+                    "id": "5a_1",
+                    "measure": "8",
+                    "type": "challenge",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": false
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": true,
+                            "time_in_stage": 44.065
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": false
+                        },
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 47.663000000000004
+                        },
+                        "20180221-rcc-1": {
+                            "played": false
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 44.971000000000004
+                        },
+                        "20180614-finland-1": {
+                            "played": false
+                        },
+                        "20180614-finland-2": {
+                            "played": false
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "4b",
+                "be418821-436d-41c2-880c-058dffb57d91": "summit",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "summit",
+                "20180119-allyourbass1": "summit",
+                "20180221-rcc-1": "5b",
+                "20180221-rcc-2": "summit",
+                "20180614-finland-1": "5b",
+                "20180614-finland-2": "5b"
+            }
+        },
+        {
+            "id": "5b",
+            "path": 1,
+            "level": 8,
+            "codes": [
+                {
+                    "id": "5b_1",
+                    "measure": "2",
+                    "type": "trigger",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 7.993
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": true,
+                            "time_in_stage": 9.629
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": true,
+                            "time_in_stage": 8.264
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 8.206
+                        },
+                        "20180221-rcc-1": {
+                            "played": true,
+                            "time_in_stage": 10.08
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 8.391
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 7.507000000000001
+                        }
+                    }
+                },
+                {
+                    "id": "5b_2",
+                    "measure": "7,8",
+                    "type": "challenge",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": false
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": false
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": false
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 21.868000000000002
+                        },
+                        "20180221-rcc-1": {
+                            "played": false
+                        },
+                        "20180614-finland-1": {
+                            "played": false
+                        },
+                        "20180614-finland-2": {
+                            "played": false
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "9333e7a2-16a9-4352-a45a-f6f42d848cde": "summit",
+                "be418821-436d-41c2-880c-058dffb57d91": "5a",
+                "13a7fa70-ae91-4541-9526-fd3b332b585d": "5a",
+                "20180119-allyourbass2": "summit",
+                "20180221-rcc-1": "5c",
+                "20180614-finland-1": "5c",
+                "20180614-finland-2": "5c"
+            }
+        },
+        {
+            "id": "5c",
+            "path": 2,
+            "level": 8,
+            "codes": [
+                {
+                    "id": "5c_1",
+                    "measure": 25,
+                    "type": "challenge",
+                    "performance_code": {
+                        "20180221-rcc-1": {
+                            "played": false
+                        },
+                        "20180614-finland-1": {
+                            "played": false
+                        },
+                        "20180614-finland-2": {
+                            "played": false
+                        }
+                    }
+                }
+            ],
+            "performance_next": {
+                "20180221-rcc-1": "summit",
+                "20180614-finland-1": "summit",
+                "20180614-finland-2": "summit"
+            }
+        },
+        {
+            "id": "summit",
+            "path": 1,
+            "level": 9,
+            "codes": [
+                {
+                    "id": "summit",
+                    "measure": "4",
+                    "type": "trigger",
+                    "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                            "played": true,
+                            "time_in_stage": 15.949
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                            "played": true,
+                            "time_in_stage": 14.774000000000001
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                            "played": true,
+                            "time_in_stage": 15.724
+                        },
+                        "20180119-allyourbass1": {
+                            "played": true,
+                            "time_in_stage": 15.277000000000001
+                        },
+                        "20180119-allyourbass2": {
+                            "played": true,
+                            "time_in_stage": 14.105
+                        },
+                        "20180221-rcc-1": {
+                            "played": true,
+                            "time_in_stage": 13.191
+                        },
+                        "20180221-rcc-2": {
+                            "played": true,
+                            "time_in_stage": 13.425
+                        },
+                        "20180614-finland-1": {
+                            "played": true,
+                            "time_in_stage": 13.325000000000001
+                        },
+                        "20180614-finland-2": {
+                            "played": true,
+                            "time_in_stage": 13.486
+                        }
+                    }
+                }
+            ],
+            "performance_next": {}
+        }
+    ]
+}
