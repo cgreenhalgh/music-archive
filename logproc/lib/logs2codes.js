@@ -5,12 +5,12 @@ performances = require('./performances');
 
 fs = require('fs');
 
-if (process.argv.length<5) {
-	console.log('ERROR: usage: node logs2codes.js CODEOUTCSV EXPERIENCEXLSX ANNALISTEXPORTFILE1 ANNALISTEXPORTFILE2 LOGFILE1 ...');
+if (process.argv.length<6) {
+	console.log('ERROR: usage: node logs2codes.js CODEOUTCSV CODEOUTVIZJSON EXPERIENCEXLSX ANNALISTEXPORTFILE1 ANNALISTEXPORTFILE2 LOGFILE1 ...');
 	process.exit(-1);
 }
 
-var expfile = process.argv[3];
+var expfile = process.argv[4];
 try {
 	console.log('read experience spreadsheet '+expfile);
 	experience.readSpreadsheet(expfile);
@@ -22,7 +22,7 @@ catch(err) {
 
 
 var annalistContext, annalistEntries = [];
-for (var fi=4; fi<=5; fi++) {
+for (var fi=5; fi<=6; fi++) {
 	var annalistfile = process.argv[fi];
 	try {
 		annalistContext = JSON.parse(fs.readFileSync(annalistfile, {encoding:'utf-8'}));
@@ -39,7 +39,7 @@ var experience_codes = experience.getCodes();
 console.log('experience codes', experience_codes);
 
 var triggered_codes = [];
-for(var j=6; j<process.argv.length; j++) {
+for(var j=7; j<process.argv.length; j++) {
 	var mclogfile = process.argv[j];
 	try {
 		console.log('read musicodes log '+mclogfile);
@@ -108,6 +108,40 @@ for (var perfid in mcperformances) {
 			}				
 			triggered_codes.push(triggered_code);
 		}
+		// stage change
+		if (1+Number(si) < performance.stages.length) {
+			var next_stage = performance.stages[1+Number(si)];
+			if (next_stage) {
+				var triggered_code = {
+						performanceid:perfid,
+						performance:performance.title,
+						stage:stage.id,
+						played: false,
+						nextstage:next_stage.id
+					}
+				triggered_codes.push(triggered_code);
+			} else {
+				var triggered_code = {
+						error:'unknown next stage '+(1+Number(si))+'/'+performance.stages.length+' for stage '+si,
+						performanceid:perfid,
+						performance:performance.title,
+						stage:stage.id,
+						played: false
+					}
+				triggered_codes.push(triggered_code);				
+			}
+		} else {
+			/*var triggered_code = {
+					error:'out of range next stage '+(1+Number(si))+'/'+performance.stages.length+' for stage '+si,
+					performanceid:perfid,
+					performance:performance.title,
+					stage:stage.id,
+					type:'NEXT',
+					played: false
+				}
+			triggered_codes.push(triggered_code);				
+			*/
+		}
 	}
 	//		console.log(performance);
 }
@@ -135,15 +169,114 @@ function escapeCsv(text) {
 }
 
 console.log('triggered_codes: '+ triggered_codes.length);
-var output = 'error,performanceid,performance,stage,code,type,measure,played,time_in_stage\n';
+var output = 'error,performanceid,performance,stage,code,type,measure,played,time_in_stage,nextstage\n';
 for (var ti in triggered_codes) {
 	var tc = triggered_codes[ti];
 	output = output + escapeCsv(tc.error)+','+escapeCsv(tc.performanceid)+','+
 	escapeCsv(tc.performance)+','+
 	escapeCsv(tc.stage)+','+escapeCsv(tc.code)+','+escapeCsv(tc.type)+','+
-	  escapeCsv(tc.measure)+','+escapeCsv(tc.played)+','+escapeCsv(tc.time_in_stage)+'\n'
+	  escapeCsv(tc.measure)+','+escapeCsv(tc.played)+','+escapeCsv(tc.time_in_stage)+','+
+	  escapeCsv(tc.nextstage)+'\n'
 }
 var outfile = process.argv[2];
 console.log('write output to '+outfile);
 fs.writeFileSync( outfile, output, {encoding:'utf-8'});
+
+// visualisation
+var vizout = {};
+vizout.performances = [];
+for (var perfid in mcperformances) {
+	var performance = mcperformances[perfid];
+	if (!performance.title) 
+		continue;
+	vizout.performances.push({id: perfid, title: performance.title});
+}
+// hack!
+vizout.stages = [
+    {"id": "basecamp", path:1, level:0 },
+    {"id": "1a", path:0, level:1 },
+    {"id": "1b", path:1, level:1 },
+    {"id": "1c", path:2, level:1 },
+    {"id": "p1a", path:0, level:2 },
+    {"id": "p2a", path:1, level:2 },
+    {"id": "p3a", path:2, level:2 },
+    {"id": "2a", path:0, level:3 },
+    {"id": "2b", path:1, level:3 },
+    {"id": "2c", path:2, level:3 },
+    {"id": "p1b", path:0, level:4 },
+    {"id": "p2b", path:1, level:4 },
+    {"id": "p3b", path:2, level:4 },
+    {"id": "3a", path:0, level:5 },
+    {"id": "3b", path:1, level:5 },
+    {"id": "3c", path:2, level:5 },
+    {"id": "p1c", path:0, level:6 },
+    {"id": "p2c", path:1, level:6 },
+    {"id": "p3c", path:2, level:6 },
+    {"id": "4a", path:0, level:7 },
+    {"id": "4b", path:1, level:7 },
+    {"id": "4c", path:2, level:7 },
+    {"id": "5a", path:0, level:8 },
+    {"id": "5b", path:1, level:8 },
+    {"id": "5c", path:2, level:8 },
+    {"id": "summit", path:1, level:9 }
+];
+/*var stages = experience.getStages();
+for (var si in stages) {
+	var stage = stages[si];
+	vizout.stages.push({id: stage.stage});
+}*/
+for (var si in vizout.stages) {
+	var stage = vizout.stages[si];
+	stage.codes = [];
+	stage.performance_next = {};
+}
+for (var ci in experience_codes) {
+	var code = experience_codes[ci];
+	var stage = vizout.stages.find(function(s) { return s.id == code.stage });
+	if (stage) {
+		stage.codes.push({id: code.id, measure: code.measure, type: code.type, performance_code: {} })
+	} else {
+		console.log('error: could not find stage '+code.stage+' for code '+code.id)
+	}
+}
+// sort codes?! - doesn't put Ending... at end yet :-(
+vizout.stages.sort(function(a,b) {
+	if (Number(a) < Number(b) && Number(a) != 0) 
+		return -1;
+	else if (Number(a) > Number(b) && Number(b) != 0)
+		return 1;
+	else 
+		return String(a).localeCompare(String(b));
+});
+for (var perfid in mcperformances) {
+	var performance = mcperformances[perfid];
+	if (!performance.title) 
+		continue;
+	for (var si in performance.stages) {
+		var stage = performance.stages[si];
+		var vstage = vizout.stages.find(function(s) { return s.id == stage.id })
+		if (vstage && 1+Number(si) < performance.stages.length) {
+			var next_stage = performance.stages[1+Number(si)];
+			if (next_stage) {
+				vstage.performance_next[perfid] = next_stage.id;
+			}
+		}
+	}
+}
+for (var tc in triggered_codes) {
+	var triggered_code = triggered_codes[tc];
+	if (!triggered_code.code)
+		continue;
+	var vstage = vizout.stages.find(function(s) { return s.id == triggered_code.stage });
+	if (!vstage)
+		continue;
+	var vcode = vstage.codes.find(function(c) { return c.id == triggered_code.code });
+	if (!vcode)
+		continue;
+	vcode.performance_code[triggered_code.performanceid] = { played: triggered_code.played, time_in_stage: triggered_code.time_in_stage };
+}
+var vizoutput = JSON.stringify(vizout,null, 4);
+var outfile2 = process.argv[3];
+console.log('write viz output to '+outfile2);
+fs.writeFileSync( outfile2, vizoutput, {encoding:'utf-8'});
 console.log('done');

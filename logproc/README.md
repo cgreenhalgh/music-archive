@@ -53,10 +53,45 @@ node lib/log2midi.js test/data/20170608T112725862Z-default.log
 ```
 
 ## Codes triggered
+```
+docker run --rm -it --name log \
+ -v /vagrant/logs/logproc:/srv/archive/logs \
+ -v /vagrant/html/1/archive/assets/data:/srv/archive/output \
+ logproc /bin/sh
+```
+
+get musichub-performances.json from hub. Also later log files.
 
 ```
-node lib/logs2codes.js output/codes_triggered.csv output/mkGameEngine.xlsx output/climb-performances-20170608.json output/musichub-performances.json logs/20170608T112725862Z-default.log ...
+node lib/logs2codes.js output/codes_triggered.csv \
+ output/codes_triggered_viz.json \
+ output/mkGameEngine.xlsx output/climb-performances-20170608.json \
+ output/musichub-performances.json \
+ logs/20170608T112725862Z-default.log \
+ logs/20180119T095247314Z-default.log \
+ logs/processlog-upload-20180221T150958151Z.log \
+ logs/processlog-upload-20180614T175953180Z.log \
+ ...
 ```
+
+### Viz format
+
+object:
+- `performances`: array of `{` `id`, `title` `}`
+- `stage`: array of `stage`
+
+`stage` object with 
+- `id`, 
+- `path`: 0-2, 
+- `level`: 0-9, 
+- `codes`:array of codes 
+- `performance_next`: map of performance id -> next stage id 
+
+code, object:
+- `id`
+- `type` - "challenge", "trigger", "choice", "approach"
+- `measure`
+- `performance_code`: map of performance id -> `{` `played`, `time_in_stage` `}`
 
 ## Online
 
