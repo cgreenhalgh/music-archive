@@ -65,12 +65,13 @@ get musichub-performances.json from hub. Also later log files.
 ```
 node lib/logs2codes.js output/codes_triggered.csv \
  output/codes_triggered_viz.json \
- output/mkGameEngine.xlsx output/climb-performances-20170608.json \
+ output/mkGameEngine.xlsx output/climb-performances-20170608-w-am.json \
  output/musichub-performances.json \
  logs/20170608T112725862Z-default.log \
  logs/20180119T095247314Z-default.log \
  logs/processlog-upload-20180221T150958151Z.log \
  logs/processlog-upload-20180614T175953180Z.log \
+ logs/20170825T202350715Z-default.log \
  ...
 ```
 

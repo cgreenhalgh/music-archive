@@ -16,6 +16,11 @@
   fill: none;
 }
 
+.notdefined {
+    fill: none;
+    stroke: #aaa;
+    shape-rendering: crispEdges;
+}
 .notplayed {
     fill: red;
     stroke: grey;
@@ -102,7 +107,7 @@ var chart = d3.select(".chart")
   .attr("x", function(d,i) { return PADDING+d.level*X_PITCH+X_PITCH/2+ICON_SIZE*d.codes.length/2 })
   .attr("y", function(d,i) { return PADDING+d.path*(LANE_SIZE+TITLE_SIZE+ICON_SIZE*data.performances.length)+TITLE_SIZE-ICON_SIZE })
   .attr("text-anchor", "middle")
-  .text(function(d,i) { return d.id; })
+  .text(function(d,i) { return d.title; })
 
   chart.selectAll("rect.stagebox")
   .data(data.stages)
@@ -137,7 +142,8 @@ var chart = d3.select(".chart")
 	  (PADDING+d.path*(LANE_SIZE+TITLE_SIZE+ICON_SIZE*data.performances.length)+TITLE_SIZE+ICON_SIZE*d.pix)+ ")"; });
 
   vcodes.append("path")
-  .classed("notplayed", function(d,i) { console.log("code", i, d); return !d.played })
+  .classed("notplayed", function(d,i) { console.log("code", i, d); return !d.played && d.played!==undefined})
+  .classed("notdefined", function(d,i) { console.log("code", i, d); return d.played===undefined })
   .classed("played", function(d,i) { return d.played })
   .attr("fill", function(d,i) { return d.played ? "red" : "black"})
   .attr("d", function(d, i) { if ("challenge"==d.type || "choice"==d.type) return "M6 0 L12 6 L6 12 L0 6 L6 0";

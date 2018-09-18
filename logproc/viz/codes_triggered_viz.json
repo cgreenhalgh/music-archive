@@ -2,44 +2,59 @@
     "performances": [
         {
             "id": "9333e7a2-16a9-4352-a45a-f6f42d848cde",
-            "title": "Dress rehearsal of Climb!"
+            "title": "Dress rehearsal of Climb!",
+            "startTime": 1496931213302
         },
         {
             "id": "be418821-436d-41c2-880c-058dffb57d91",
-            "title": "Premiere performance of Climb!"
+            "title": "Premiere performance of Climb!",
+            "startTime": 1496938448344
         },
         {
             "id": "13a7fa70-ae91-4541-9526-fd3b332b585d",
-            "title": "Second performance of Climb!"
+            "title": "Second performance of Climb!",
+            "startTime": 1496940523182
+        },
+        {
+            "id": "f01a5d26-6569-4879-9aef-58334110c307",
+            "title": "Climb! at Audio Mostly",
+            "startTime": 1503693058906
         },
         {
             "id": "20180119-allyourbass1",
-            "title": "Climb! at All Your Bass"
+            "title": "Climb! at All Your Bass",
+            "startTime": 1516385121168
         },
         {
             "id": "20180119-allyourbass2",
-            "title": "Climb! at All Your Bass (2)"
+            "title": "Climb! at All Your Bass (2)",
+            "startTime": 1516386761013
         },
         {
             "id": "20180221-rcc-1",
-            "title": "Climb! at RCC 2018 (1)"
+            "title": "Climb! at RCC 2018 (1)",
+            "startTime": 1519222906044
         },
         {
             "id": "20180221-rcc-2",
-            "title": "Climb! at RCC 2018 (2)"
+            "title": "Climb! at RCC 2018 (2)",
+            "startTime": 1519224654783
         },
         {
             "id": "20180614-finland-1",
-            "title": "Climb! in Finland (1)"
+            "title": "Climb! in Finland (1)",
+            "startTime": 1528994893850
         },
         {
             "id": "20180614-finland-2",
-            "title": "Climb! in Finland (2)"
+            "title": "Climb! in Finland (2)",
+            "startTime": 1528997667751
         }
     ],
     "stages": [
         {
             "id": "3a",
+            "title": "Shimmering Stone",
             "path": 0,
             "level": 5,
             "codes": [],
@@ -49,19 +64,27 @@
                 "20180221-rcc-1": "p1c",
                 "20180221-rcc-2": "p1c",
                 "20180614-finland-1": "p1c",
-                "20180614-finland-2": "p1c"
+                "20180614-finland-2": "p1c",
+                "f01a5d26-6569-4879-9aef-58334110c307": "summit"
             }
         },
         {
             "id": "basecamp",
+            "title": "Basecamp",
             "path": 1,
             "level": 0,
             "codes": [
-                 {
+                {
                     "id": "BC_SP",
                     "measure": 6,
                     "type": "approach",
                     "performance_code": {
+                        "9333e7a2-16a9-4352-a45a-f6f42d848cde": {
+                        },
+                        "be418821-436d-41c2-880c-058dffb57d91": {
+                        },
+                        "13a7fa70-ae91-4541-9526-fd3b332b585d": {
+                        },
                         "20180119-allyourbass1": {
                             "played": true,
                             "time_in_stage": 47.916000000000004
@@ -85,6 +108,10 @@
                         "20180614-finland-2": {
                             "played": true,
                             "time_in_stage": 28.927
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
+                            "played": true,
+                            "time_in_stage": 35.038000000000004
                         }
                     }
                 },
@@ -120,6 +147,9 @@
                             "time_in_stage": 51.821
                         },
                         "20180614-finland-2": {
+                            "played": false
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
                             "played": false
                         }
                     }
@@ -159,6 +189,9 @@
                         },
                         "20180614-finland-2": {
                             "played": false
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
+                            "played": false
                         }
                     }
                 },
@@ -195,6 +228,9 @@
                         "20180614-finland-2": {
                             "played": true,
                             "time_in_stage": 55.68
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
+                            "played": false
                         }
                     }
                 }
@@ -208,11 +244,13 @@
                 "20180221-rcc-1": "1a",
                 "20180221-rcc-2": "1c",
                 "20180614-finland-1": "1a",
-                "20180614-finland-2": "1c"
+                "20180614-finland-2": "1c",
+                "f01a5d26-6569-4879-9aef-58334110c307": "1a"
             }
         },
         {
             "id": "1b",
+            "title": "Stones",
             "path": 1,
             "level": 1,
             "codes": [
@@ -247,6 +285,7 @@
         },
         {
             "id": "1c",
+            "title": "Echo",
             "path": 2,
             "level": 1,
             "codes": [
@@ -306,6 +345,7 @@
         },
         {
             "id": "p1a",
+            "title": "Path 1a",
             "path": 0,
             "level": 2,
             "codes": [
@@ -320,17 +360,23 @@
                         "20180614-finland-1": {
                             "played": true,
                             "time_in_stage": 34.709
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
+                            "played": true,
+                            "time_in_stage": 53.499
                         }
                     }
                 }
             ],
             "performance_next": {
                 "9333e7a2-16a9-4352-a45a-f6f42d848cde": "2a",
-                "20180614-finland-1": "2a"
+                "20180614-finland-1": "2a",
+                "f01a5d26-6569-4879-9aef-58334110c307": "2a"
             }
         },
         {
             "id": "p2a",
+            "title": "Path 2a",
             "path": 1,
             "level": 2,
             "codes": [],
@@ -341,6 +387,7 @@
         },
         {
             "id": "p3a",
+            "title": "Path 3a",
             "path": 2,
             "level": 2,
             "codes": [
@@ -377,6 +424,7 @@
         },
         {
             "id": "2a",
+            "title": "Flooded Path",
             "path": 0,
             "level": 3,
             "codes": [
@@ -403,6 +451,10 @@
                         "20180614-finland-2": {
                             "played": true,
                             "time_in_stage": 71.032
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
+                            "played": true,
+                            "time_in_stage": 64.242
                         }
                     }
                 }
@@ -412,11 +464,13 @@
                 "20180119-allyourbass1": "p1b",
                 "20180221-rcc-2": "p1b",
                 "20180614-finland-1": "2c",
-                "20180614-finland-2": "p1b"
+                "20180614-finland-2": "p1b",
+                "f01a5d26-6569-4879-9aef-58334110c307": "p1b"
             }
         },
         {
             "id": "2b",
+            "title": "Tree Trunk",
             "path": 1,
             "level": 3,
             "codes": [
@@ -493,6 +547,7 @@
         },
         {
             "id": "2c",
+            "title": "Herd of Cows",
             "path": 2,
             "level": 3,
             "codes": [
@@ -556,6 +611,7 @@
         },
         {
             "id": "p1b",
+            "title": "Path 1b",
             "path": 0,
             "level": 4,
             "codes": [
@@ -578,6 +634,10 @@
                         "20180614-finland-2": {
                             "played": true,
                             "time_in_stage": 28.811
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
+                            "played": true,
+                            "time_in_stage": 33.278
                         }
                     }
                 }
@@ -586,11 +646,13 @@
                 "9333e7a2-16a9-4352-a45a-f6f42d848cde": "3a",
                 "20180119-allyourbass1": "3a",
                 "20180221-rcc-2": "3a",
-                "20180614-finland-2": "3a"
+                "20180614-finland-2": "3a",
+                "f01a5d26-6569-4879-9aef-58334110c307": "3a"
             }
         },
         {
             "id": "p2b",
+            "title": "Path 2b",
             "path": 1,
             "level": 4,
             "codes": [],
@@ -604,6 +666,7 @@
         },
         {
             "id": "p3b",
+            "title": "Path 3b",
             "path": 2,
             "level": 4,
             "codes": [
@@ -618,6 +681,7 @@
         },
         {
             "id": "1a",
+            "title": "Angry Deer",
             "path": 0,
             "level": 1,
             "codes": [
@@ -641,6 +705,10 @@
                         "20180614-finland-1": {
                             "played": true,
                             "time_in_stage": 10.286
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
+                            "played": true,
+                            "time_in_stage": 20.77
                         }
                     }
                 },
@@ -662,6 +730,10 @@
                         "20180614-finland-1": {
                             "played": true,
                             "time_in_stage": 25.835
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
+                            "played": true,
+                            "time_in_stage": 33.104
                         }
                     }
                 }
@@ -670,11 +742,13 @@
                 "9333e7a2-16a9-4352-a45a-f6f42d848cde": "p1a",
                 "be418821-436d-41c2-880c-058dffb57d91": "2b",
                 "20180221-rcc-1": "2b",
-                "20180614-finland-1": "p1a"
+                "20180614-finland-1": "p1a",
+                "f01a5d26-6569-4879-9aef-58334110c307": "p1a"
             }
         },
         {
             "id": "3b",
+            "title": "Whispering Forest",
             "path": 1,
             "level": 5,
             "codes": [
@@ -684,10 +758,8 @@
                     "type": "challenge",
                     "performance_code": {
                         "be418821-436d-41c2-880c-058dffb57d91": {
-                            "played": false
                         },
                         "13a7fa70-ae91-4541-9526-fd3b332b585d": {
-                            "played": false
                         },
                         "20180119-allyourbass2": {
                             "played": true,
@@ -712,6 +784,7 @@
         },
         {
             "id": "3c",
+            "title": "Talkative Stranger",
             "path": 2,
             "level": 5,
             "codes": [
@@ -732,6 +805,7 @@
         },
         {
             "id": "p1c",
+            "title": "Path 1c",
             "path": 0,
             "level": 6,
             "codes": [],
@@ -746,6 +820,7 @@
         },
         {
             "id": "p2c",
+            "title": "Path 2c",
             "path": 1,
             "level": 6,
             "codes": [],
@@ -757,6 +832,7 @@
         },
         {
             "id": "p3c",
+            "title": "Path 3c",
             "path": 2,
             "level": 6,
             "codes": [
@@ -771,6 +847,7 @@
         },
         {
             "id": "4a",
+            "title": "Sleeping Bear",
             "path": 0,
             "level": 7,
             "codes": [
@@ -848,6 +925,7 @@
         },
         {
             "id": "4b",
+            "title": "Hallucination",
             "path": 1,
             "level": 7,
             "codes": [
@@ -884,6 +962,7 @@
         },
         {
             "id": "4c",
+            "title": "Apple Tree",
             "path": 2,
             "level": 7,
             "codes": [],
@@ -891,6 +970,7 @@
         },
         {
             "id": "5a",
+            "title": "Rolling Stones",
             "path": 0,
             "level": 8,
             "codes": [
@@ -942,6 +1022,7 @@
         },
         {
             "id": "5b",
+            "title": "Birds Attack",
             "path": 1,
             "level": 8,
             "codes": [
@@ -1022,6 +1103,7 @@
         },
         {
             "id": "5c",
+            "title": "Falling Trees",
             "path": 2,
             "level": 8,
             "codes": [
@@ -1050,6 +1132,7 @@
         },
         {
             "id": "summit",
+            "title": "Summit",
             "path": 1,
             "level": 9,
             "codes": [
@@ -1093,6 +1176,10 @@
                         "20180614-finland-2": {
                             "played": true,
                             "time_in_stage": 13.486
+                        },
+                        "f01a5d26-6569-4879-9aef-58334110c307": {
+                            "played": true,
+                            "time_in_stage": 15.929
                         }
                     }
                 }

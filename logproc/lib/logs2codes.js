@@ -189,42 +189,52 @@ for (var perfid in mcperformances) {
 	var performance = mcperformances[perfid];
 	if (!performance.title) 
 		continue;
-	vizout.performances.push({id: perfid, title: performance.title});
+	vizout.performances.push({id: perfid, title: performance.title, startTime: performance.startTime});
 }
+vizout.performances.sort(function(a,b) { return String(a.startTime).localeCompare(String(b.startTime)); })
 // hack!
 vizout.stages = [
-    {"id": "basecamp", path:1, level:0 },
-    {"id": "1a", path:0, level:1 },
-    {"id": "1b", path:1, level:1 },
-    {"id": "1c", path:2, level:1 },
-    {"id": "p1a", path:0, level:2 },
-    {"id": "p2a", path:1, level:2 },
-    {"id": "p3a", path:2, level:2 },
-    {"id": "2a", path:0, level:3 },
-    {"id": "2b", path:1, level:3 },
-    {"id": "2c", path:2, level:3 },
-    {"id": "p1b", path:0, level:4 },
-    {"id": "p2b", path:1, level:4 },
-    {"id": "p3b", path:2, level:4 },
-    {"id": "3a", path:0, level:5 },
-    {"id": "3b", path:1, level:5 },
-    {"id": "3c", path:2, level:5 },
-    {"id": "p1c", path:0, level:6 },
-    {"id": "p2c", path:1, level:6 },
-    {"id": "p3c", path:2, level:6 },
-    {"id": "4a", path:0, level:7 },
-    {"id": "4b", path:1, level:7 },
-    {"id": "4c", path:2, level:7 },
-    {"id": "5a", path:0, level:8 },
-    {"id": "5b", path:1, level:8 },
-    {"id": "5c", path:2, level:8 },
-    {"id": "summit", path:1, level:9 }
+    {"id": "basecamp", title:"Basecamp", path:1, level:0 },
+    {"id": "1a",  title:"Angry Deer",path:0, level:1 },
+    {"id": "1b",  title:"Stones",path:1, level:1 },
+    {"id": "1c",  title:"Echo",path:2, level:1 },
+    {"id": "p1a",  title:"Path 1a",path:0, level:2 },
+    {"id": "p2a",  title:"Path 2a",path:1, level:2 },
+    {"id": "p3a",  title:"Path 3a",path:2, level:2 },
+    {"id": "2a",  title:"Flooded Path",path:0, level:3 },
+    {"id": "2b", title:"Tree Trunk", path:1, level:3 },
+    {"id": "2c", title:"Herd of Cows", path:2, level:3 },
+    {"id": "p1b", title:"Path 1b", path:0, level:4 },
+    {"id": "p2b", title:"Path 2b", path:1, level:4 },
+    {"id": "p3b", title:"Path 3b", path:2, level:4 },
+    {"id": "3a", title:"Shimmering Stone", path:0, level:5 },
+    {"id": "3b", title:"Whispering Forest", path:1, level:5 },
+    {"id": "3c", title:"Talkative Stranger", path:2, level:5 },
+    {"id": "p1c", title:"Path 1c", path:0, level:6 },
+    {"id": "p2c", title:"Path 2c", path:1, level:6 },
+    {"id": "p3c", title:"Path 3c", path:2, level:6 },
+    {"id": "4a", title:"Sleeping Bear", path:0, level:7 },
+    {"id": "4b", title:"Hallucination", path:1, level:7 },
+    {"id": "4c", title:"Apple Tree", path:2, level:7 },
+    {"id": "5a", title:"Rolling Stones", path:0, level:8 },
+    {"id": "5b", title:"Birds Attack", path:1, level:8 },
+    {"id": "5c", title:"Falling Trees", path:2, level:8 },
+    {"id": "summit", title:"Summit", path:1, level:9 }
 ];
-/*var stages = experience.getStages();
-for (var si in stages) {
-	var stage = stages[si];
-	vizout.stages.push({id: stage.stage});
-}*/
+/*
+var exstages = experience.getStages();
+for (var si in exstages) {
+	var exstage = exstages[si];
+	var title = exstage.meifile;
+	// TODO fix
+	var stage = vizout.stages.find(function(s) { return s.id == exstage.stage});
+	if (stage)
+		stage.title = title;
+	else {
+		console.log('could not find stage '+exstage.stage+' to set title');
+	}
+}
+*/
 for (var si in vizout.stages) {
 	var stage = vizout.stages[si];
 	stage.codes = [];
