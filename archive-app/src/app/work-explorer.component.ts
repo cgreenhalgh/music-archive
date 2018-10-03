@@ -1,5 +1,6 @@
 import 'rxjs/add/operator/switchMap';
-import { Component, OnInit, ElementRef, NgZone, OnDestroy }      from '@angular/core';
+import { Component, OnInit, ElementRef, NgZone, OnDestroy, ViewChild }      from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location }               from '@angular/common';
 import { Renderer2 } from '@angular/core';
@@ -143,6 +144,7 @@ class PartPerformance extends Entity {
 })
 
 export class WorkExplorerComponent implements OnInit, OnDestroy {
+  @ViewChild('appframe') appframe: ElementRef;
   work: Entity;
   performances: Performance[] = [];
   allPerformancesSelected:boolean = true;
@@ -156,7 +158,10 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 	countdownLevels: number[] = [5,4,3,2,1];
 	showVideo: boolean = true;
 	popout: Window;
-  
+  showApp:boolean = false;
+  appUrl:SafeResourceUrl;
+  messageSub:any;
+    
   constructor(
 	private elRef:ElementRef,
     private recordsService: RecordsService,
@@ -164,7 +169,8 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     private location: Location,
     private renderer: Renderer2,
     private ngZone: NgZone,
-    private linkappsService: LinkappsService
+    private linkappsService: LinkappsService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -173,10 +179,58 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     this.route.params
       .switchMap((params: Params) => this.recordsService.getWork(params['id']))
       .subscribe(work => this.initialiseForWork(work));
+    this.messageSub = this.linkappsService.getEmitter().subscribe((ev) => {
+        if ('app.start'==ev.event) {
+          console.log('got app.start...');
+          this.updateApp();
+        } else {
+          console.log('unknown linkapps event', ev);
+        }
+    })
+    this.appUrl = this.sanitizer.bypassSecurityTrustResourceUrl("http://localhost:8080/1/archive-muzivisual/?p=archive&archive=1");
   }
   ngOnDestroy(): void {
     // mainly for popout
     this.stop();
+    this.messageSub.unsubscribe();
+  }
+  clickShowApp(): void {
+    this.showApp = !this.showApp;
+  }
+  updateApp(): void {
+    var msg:any = {version: 'mrl-music.archive/1.0', event: 'play.update'};
+    if (this.currentlyPlaying) {
+      if (this.currentlyPlaying.performance) {
+        // performance title
+        msg.performanceTitle = this.currentlyPlaying.performance.label;
+        msg.performanceId = this.currentlyPlaying.performance.getValue("coll:system_id");
+        if (this.currentlyPlaying.performance.performers) {
+          msg.performers = [];
+          for (var pi in this.currentlyPlaying.performance.performers) {
+            // performer(s)
+            var performer = this.currentlyPlaying.performance.performers[pi];
+            msg.performers.push(performer.label);
+          }
+        }
+        // TODO venue -> label
+        msg.venue = this.currentlyPlaying.performance.getValue("crm:P7_took_place_at");
+        // e.g."Place/Djanogly_Recital_Hall"
+        //if (msg.venue.substring(0,6)=='Place/')
+        //  msg.venue = msg.venue.substring(6);
+        //msg.venue = msg.venue.replace('_', ' ');
+      }
+      // stages in this performance
+      var parts = this.partPerformances.filter(pp => pp.performance===this.currentlyPlaying.performance &&
+         pp.startTime<=this.currentlyPlaying.startTime)
+        .sort((a,b)=>a.startTime-b.startTime).map(pp => pp.part.getValue("coll:part_id"));
+      msg.stages = parts;
+      console.log('update app', msg);
+      try {
+        this.appframe.nativeElement.contentWindow.postMessage(JSON.stringify(msg), "*");
+      } catch (err) {
+        console.log('error updating app window', err);
+      }
+    } 
   }
   popoutPlayer(): void {
     console.log('popout player');
@@ -265,6 +319,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 			console.log('loaded work to explore');
 			this.buildAudioClips();
       this.buildPopularity();
+            this.updateApp();
 		});
 	}
 	
@@ -526,7 +581,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		let wasPlaying = this.currentlyPlaying;
 		this.currentlyPlaying = this.partPerformances.find(pp => pp.performance===perf && pp.part===part);
 		this.currentlyPlaying.subevents.map(ev => ev.clear());
-		
+
 		//console.log('elRef',this.elRef);
 		let rec = this.recordings.find(r => r.isVideo==this.showVideo && r.performance===perf);
 		if (!rec) {
@@ -567,6 +622,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 				}
 			}
 		}
+        this.updateApp();
 	}
 	stop() {
 		if (this.currentlyPlaying) {
@@ -575,6 +631,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		}
 		this.pause();
 		this.currentlyPlaying = null;
+        this.updateApp();
 	}
 	audioTimeupdate(event,rec) {
 		console.log('timeupdate '+rec.id+' '+event.target.currentTime);
@@ -598,6 +655,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 					this.currentlyPlaying.part.active = true;
 					this.currentlyPlaying.setCurrentTime(rec.lastTime+rec.startTime-this.currentlyPlaying.startTime);
 					this.currentlyPlaying.subevents.map(ev => ev.setAbsTime(rec.lastTime+rec.startTime));
+                    this.updateApp();
 				}
 			}
 			else if (this.currentlyPlaying.part.selected) {

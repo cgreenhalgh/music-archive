@@ -42,3 +42,17 @@ video {
 video.hidden {
 	display: none;
 }
+
+iframe.hidden {
+	display:none;
+}
+.appframe {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	width: 480px;
+	height: 800px;
+	border: 2px solid grey;
+	background: black;
+	z-index: 10;
+}

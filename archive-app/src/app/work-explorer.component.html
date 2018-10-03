@@ -3,6 +3,13 @@
 	<p><a [routerLink]="['/work', work.id]">More about {{work.label}}...</a></p>
 	<p *ngIf="!showMap">Select <i class="material-icons">check_box_outline_blank</i> a Performance then play <i class="material-icons">play_circle_outline</i> its parts, or select <i class="material-icons">check_box_outline_blank</i> a Part then play <i class="material-icons">play_circle_outline</i> the different versions available.</p>
 	<p *ngIf="showMap">Select <i class="material-icons">check_box_outline_blank</i> a Performance then click on its parts, or a click on and select <i class="material-icons">check_box_outline_blank</i> a Part then play <i class="material-icons">play_circle_outline</i> the different versions available.</p>
+	<p>
+		<a (click)="clickShowApp($event)" class="pointer">
+			<i class="material-icons">{{showApp ? 'check_box' : 'check_box_outline_blank'}}</i>
+		</a>
+		Show mobile app
+	</p>
+	<iframe #appframe [ngClass]="{appframe: true, hidden: !showApp}" [src]="appUrl"></iframe>
 	<div class="row">
 	<div [ngClass]="{'col-12': !popout, 'col-lg-4': popout, 'col-md-6': popout}">
 	<h2>Performances</h2>

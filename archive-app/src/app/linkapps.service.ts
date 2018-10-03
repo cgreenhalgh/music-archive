@@ -1,29 +1,33 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 //import { RTCPeerConnection } from 'webrtc';
 
 @Injectable()
 export class LinkappsService {
 	app:Window;
+    messageEmitter:EventEmitter<any> = new EventEmitter();
 
 	constructor() {
 		console.log('created LinkappsService')
 		window.addEventListener('message', (ev) => this.onMessage(ev))
 	}
-	onMessage(ev:Event) {
-		console.log('window message: '+ev.data)
+	onMessage(ev:MessageEvent) {
+		console.log('window message: ', ev)
 		if (typeof ev.data =='string') {
 			let msg = JSON.parse(ev.data)
 			if ('mrl-music.archive/1.0'!=msg.version) {
-				console.log('ignore window message with no/wrong version: '+ev.data)
+				console.log('ignore window message with no/wrong version: ', ev.data)
 				return
 			}
-			// TODO
+            this.messageEmitter.emit(msg);
 		}
 	}
-	openApp():void {
-		console.log('open app window')
-		app = window.open('http://localhost:8080/1/archive-muzivisual/', 'archive-muzivisual');
-	}
+    getEmitter(): EventEmitter<any> {
+        return this.messageEmitter;
+    }
+//	openApp():void {
+//		console.log('open app window')
+//		this.app = window.open('http://localhost:8080/1/archive-muzivisual/', 'archive-muzivisual');
+//	}
 
 /*
     // Create peer connections and add behavior.
