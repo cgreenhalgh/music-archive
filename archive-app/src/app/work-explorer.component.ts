@@ -5,9 +5,12 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Location }               from '@angular/common';
 import { Renderer2 } from '@angular/core';
 
+import * as FileSaver from 'file-saver';
+
 import { Entity } from './entity';
 import { RecordsService }  from './records.service';
 import { LinkappsService } from './linkapps.service';
+import { PlaylistInfo, PlaylistItem } from './types';
 
 class ScreenEntity extends Entity {
 	selected:boolean = false;
@@ -192,7 +195,9 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   showApp:boolean = false;
   appUrl:SafeResourceUrl;
   messageSub:any;
-  playlists: Playlist[] = [];
+  playlistCount:number = 0;
+  editingPlaylistInfo:PlaylistInfo;
+  editingPlaylist:Playlist;
   
   constructor(
 	private elRef:ElementRef,
@@ -956,7 +961,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     }
   }
   clickPlaylistAdd(ev) {
-    this.performances.push(new Playlist('Playlist '+(this.playlists.length+1)));
+    this.performances.push(new Playlist('Playlist '+(++this.playlistCount)));
   }
   dragPartPerformance(ev, pp: PartPerformance) {
     console.log('drag pp '+pp.performance.id+' '+pp.part.id);
@@ -1014,5 +1019,43 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   dropOnClip(ev,clip:Clip) {
     // TODO
   }
+  editPlaylist($event,playlist:Playlist) {
+    console.log('edit playlist', playlist);
+    this.editingPlaylist = playlist;
+    this.editingPlaylistInfo = { title: playlist.label }
+  }
+  saveEditingPlaylist(info:PlaylistInfo) {
+    console.log('save editing playlist', info);
+    if (this.editingPlaylist) {
+        this.editingPlaylist.label = info.title;
+    }
+    this.cancelEditingPlaylist();
+  }
+  cancelEditingPlaylist() {
+    this.editingPlaylistInfo = null;
+    this.editingPlaylist = null;
+  }
+  deleteEditingPlaylist() {
+    // TODO
+  }
+  exportEditingPlaylist(info:PlaylistInfo) {
+    if (this.editingPlaylist) {
+      this.editingPlaylist.label = info.title;
+      let playlist:PlaylistInfo = { title: info.title };
+      playlist.items = [];
+      let items = this.partPerformances.filter(pp => pp.playlist === this.editingPlaylist).sort((a,b) => a.playlistOffset - b.playlistOffset);
+      for (let ii in items) {
+        let item = items[ii];
+        playlist.items.push({title: item.label, performance: item.realPerformance.id, part: item.part.id});
+      }
+      console.log('export playlist',playlist);
+      let data = JSON.stringify(playlist, null, 4);
+      let blob = new Blob([data], {
+            type: "application/json"
+        });
+      FileSaver.saveAs(blob, "playlist "+info.title+".json");
+    }
+    this.cancelEditingPlaylist();
+  }   
 }
 

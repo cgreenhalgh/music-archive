@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule }    from '@angular/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,7 +12,7 @@ import { PerformanceDetailComponent } from './performance-detail.component';
 import { PartsMapComponent } from './parts-map.component';
 import { RecordsService } from './records.service';
 import { LinkappsService } from './linkapps.service';
-
+import { PlaylistFormComponent } from './playlist-form.component';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
@@ -22,11 +22,13 @@ import { AppRoutingModule } from './app-routing.module';
     WorkDetailComponent,
     WorkExplorerComponent,
     PerformanceDetailComponent,
-    PartsMapComponent
+    PartsMapComponent,
+    PlaylistFormComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpModule,
     NgbModule.forRoot()

@@ -34,6 +34,9 @@
 			</a>
 			{{perf.label}}<!-- (@ {{perf.startTime}}) -->
 			<span class="performer" *ngFor="let performer of perf.performers">{{performer.label}} </span>
+			<a *ngIf="perf.isPlaylist" (click)="editPlaylist($event,perf)" class="pointer">
+				<i class="material-icons">edit</i>
+			</a>
 		</div>
 		<a (click)="clickPlaylistAdd($event)" class="pointer" [ngClass]="{'col-sm-6':!popout, 'col-md-4':!popout, 'col-12':popout, performance:true}" >
 			<i class="material-icons">playlist_add</i>
@@ -185,4 +188,9 @@
 	</ul> -->
 	</div>
 	<div class="blankAtBottom"></div>
+	<div *ngIf="editingPlaylistInfo">
+      <playlist-form (save)="saveEditingPlaylist($event)" (cancel)="cancelEditingPlaylist()" [disabled]="false"
+       [playlist]="editingPlaylistInfo" (dodelete)="deleteEditingPlaylist()" (doexport)="exportEditingPlaylist($event)"></playlist-form>
+    </div>
+	
 </div>
