@@ -715,7 +715,9 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
         if (!nextPp) {
           console.log('no valid clip to play');
           this.pause();
-          event.target.currentTime = this.currentlyPlaying.startTime+ (this.currentlyPlaying.clip.duration ? this.currentlyPlaying.clip.duration : 0) - rec.startTime;
+          let maxTime = this.currentlyPlaying.startTime+ (this.currentlyPlaying.clip.duration ? this.currentlyPlaying.clip.duration : 0) - rec.startTime;
+          if (rec.lastTime > maxTime + 0.1)
+            event.target.currentTime = maxTime;
         } else if (nextPp!==this.currentlyPlaying) {
           console.log('change clip to +'+nextPp.playlistOffset);
           this.playInternal(nextPp.performance, nextPp.part, nextPp as Clip);
