@@ -980,6 +980,19 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       return;
     ev.preventDefault();
   }
+  playlistAddPartPerformance(playlist:Playlist, part:string,performance:string) {
+      let pp = this.partPerformances.find(pp => pp.part.id == part && pp.performance.id == performance);
+      if (!pp) {
+        console.log('error: could not locate part performance '+performance+' '+part);
+        return;
+      }
+      let clip = new Clip(playlist, pp);
+      // duration so far
+      let duration = this.partPerformances.filter(pp => pp.playlist === playlist).map(pp => pp.videoClip ? pp.videoClip.duration : 0).reduce((a,b)=> a+b, 0);
+      console.log('total duration was '+duration+' + '+(clip.videoClip ? clip.videoClip.duration : 0));
+      clip.playlistOffset = duration;
+      this.partPerformances.push(clip);
+  }
   dropOnPerformance(ev, pp:Performance) {
     if (!pp.isPlaylist) {
       console.log('error: drop on non-playlist');
@@ -994,17 +1007,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     let info = JSON.parse(data);
     // TODO handle Clip drop
     if ('PartPerformance'==info.type) {
-      let pp = this.partPerformances.find(pp => pp.part.id == info.part && pp.performance.id == info.performance);
-      if (!pp) {
-        console.log('error: could not locate part performance '+pp.performance.id+' '+pp.part.id);
-        return;
-      }
-      let clip = new Clip(playlist, pp);
-      // duration so far
-      let duration = this.partPerformances.filter(pp => pp.playlist === playlist).map(pp => pp.videoClip ? pp.videoClip.duration : 0).reduce((a,b)=> a+b, 0);
-      console.log('total duration was '+duration+' + '+(clip.videoClip ? clip.videoClip.duration : 0));
-      clip.playlistOffset = duration;
-      this.partPerformances.push(clip);
+      this.playlistAddPartPerformance(playlist, info.part, info.performance);
     }
   }
   clickClipPlay(ev,clip:Clip) {
@@ -1023,12 +1026,39 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     console.log('edit playlist', playlist);
     this.editingPlaylist = playlist;
     this.editingPlaylistInfo = { title: playlist.label }
+    this.editingPlaylistInfo.items = [];
+    let items = this.partPerformances.filter(pp => pp.playlist === this.editingPlaylist).sort((a,b) => a.playlistOffset - b.playlistOffset);
+    for (let ii in items) {
+      let item = items[ii];
+      this.editingPlaylistInfo.items.push({title: item.label, performance: item.realPerformance.id, part: item.part.id});
+    }
+  }
+  saveEditingPlaylistInternal(info:PlaylistInfo) {
+    if (this.editingPlaylist.selected) {
+      this.stop();
+    }
+    if (this.editingPlaylist) {
+      this.editingPlaylist.label = info.title;
+      //let items = this.partPerformances.filter(pp => pp.playlist === this.editingPlaylist).sort((a,b) => a.playlistOffset - b.playlistOffset);
+      for (var ii=0; ii<this.partPerformances.length; ii++) {
+        let item = this.partPerformances[ii];
+        if (item.playlist === this.editingPlaylist) {
+          this.partPerformances.splice(ii,1);
+          ii--;
+        }
+      }
+      for (var ix in info.items) {
+        let item = info.items[ix];
+        this.playlistAddPartPerformance(this.editingPlaylist, item.part, item.performance);
+      }
+      if (this.editingPlaylist.selected) {
+        this.clickPerformanceCheckbox(null, this.editingPlaylist);
+      }
+    }
   }
   saveEditingPlaylist(info:PlaylistInfo) {
     console.log('save editing playlist', info);
-    if (this.editingPlaylist) {
-        this.editingPlaylist.label = info.title;
-    }
+    this.saveEditingPlaylistInternal(info);
     this.cancelEditingPlaylist();
   }
   cancelEditingPlaylist() {
@@ -1039,17 +1069,10 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     // TODO
   }
   exportEditingPlaylist(info:PlaylistInfo) {
+    this.saveEditingPlaylistInternal(info);
     if (this.editingPlaylist) {
-      this.editingPlaylist.label = info.title;
-      let playlist:PlaylistInfo = { title: info.title };
-      playlist.items = [];
-      let items = this.partPerformances.filter(pp => pp.playlist === this.editingPlaylist).sort((a,b) => a.playlistOffset - b.playlistOffset);
-      for (let ii in items) {
-        let item = items[ii];
-        playlist.items.push({title: item.label, performance: item.realPerformance.id, part: item.part.id});
-      }
-      console.log('export playlist',playlist);
-      let data = JSON.stringify(playlist, null, 4);
+      console.log('export playlist',info);
+      let data = JSON.stringify(info, null, 4);
       let blob = new Blob([data], {
             type: "application/json"
         });

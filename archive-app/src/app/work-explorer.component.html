@@ -14,7 +14,7 @@
 	</div>
 	<div class="row">
 	<div [ngClass]="{'col-12': !popout, 'col-lg-4': popout, 'col-md-6': popout}">
-	<h2>Performances</h2>
+	<h2>Performances and Playlists</h2>
 		<div class="row">
 		<div [ngClass]="{'col-sm-6':!popout, 'col-md-4':!popout, 'col-12':popout, performance:true}" >
 			<a (click)="clickAllPerformancesCheckbox($event)" class="pointer">
@@ -66,7 +66,7 @@
 			</a>
 			{{part.label}}
 		</div>
-		<div [ngClass]="{'col-sm-12':!popout, 'col-md-8':!popout, 'col-lg-6':!popout, 'col-12':popout}">
+		<div [ngClass]="{'col-sm-12':!popout, 'col-md-12':!popout, 'col-lg-12':!popout, 'col-12':popout}">
 			<p *ngIf="selectedPart"><em>{{selectedPart.label}}</em>: {{selectedPart.description}}</p>
 			<p *ngIf="!selectedPart && currentlyPlaying"><em>{{currentlyPlaying.part.label}}</em>: {{currentlyPlaying.part.description}}</p>
 		</div>
@@ -82,7 +82,7 @@
 			{{clip.part.label}}
 			<span class="performer">{{clip.realPerformance.label}}</span>
 		</div>
-		<div [ngClass]="{'col-sm-12':!popout, 'col-md-8':!popout, 'col-lg-6':!popout, 'col-12':popout}">
+		<div [ngClass]="{'col-sm-12':!popout, 'col-md-12':!popout, 'col-lg-12':!popout, 'col-12':popout}">
 			<p *ngIf="selectedPart"><em>{{selectedPart.label}}</em>: {{selectedPart.description}}</p>
 			<p *ngIf="!selectedPart && currentlyPlaying"><em>{{currentlyPlaying.part.label}}</em>: {{currentlyPlaying.part.description}}</p>
 		</div>
