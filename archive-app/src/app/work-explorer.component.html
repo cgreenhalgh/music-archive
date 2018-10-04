@@ -1,15 +1,17 @@
-<div class="container" *ngIf="work"><h1>{{work.label}}</h1>
+<div class="container" [ngClass]="{containerShiftLeft:showApp}" *ngIf="work"><h1>{{work.label}}</h1>
 <!-- <i class="material-icons">face</i> -->
 	<p><a [routerLink]="['/work', work.id]">More about {{work.label}}...</a></p>
 	<p *ngIf="!showMap">Select <i class="material-icons">check_box_outline_blank</i> a Performance then play <i class="material-icons">play_circle_outline</i> its parts, or select <i class="material-icons">check_box_outline_blank</i> a Part then play <i class="material-icons">play_circle_outline</i> the different versions available.</p>
 	<p *ngIf="showMap">Select <i class="material-icons">check_box_outline_blank</i> a Performance then click on its parts, or a click on and select <i class="material-icons">check_box_outline_blank</i> a Part then play <i class="material-icons">play_circle_outline</i> the different versions available.</p>
-	<p>
+	<p  class="hideIfNotWide">
 		<a (click)="clickShowApp($event)" class="pointer">
 			<i class="material-icons">{{showApp ? 'check_box' : 'check_box_outline_blank'}}</i>
 		</a>
 		Show mobile app
 	</p>
-	<iframe #appframe [ngClass]="{appframe: true, hidden: !showApp}" [src]="appUrl"></iframe>
+	<div [ngClass]="{appframe: true, hidden: !showApp}">
+		<iframe #appframe [ngClass]="{appframeContent: true, hidden: !showApp}" [src]="appUrl"></iframe>
+	</div>
 	<div class="row">
 	<div [ngClass]="{'col-12': !popout, 'col-lg-4': popout, 'col-md-6': popout}">
 	<h2>Performances</h2>
@@ -62,10 +64,10 @@
 		</div>
 	</div>
 	<div class="row">
-		<div *ngIf="showMap" [ngClass]="{'col-sm-12':!popout, 'col-md-8':!popout, 'col-lg-6':!popout, 'col-12':popout}">
+		<div *ngIf="showMap" [ngClass]="{'col-sm-12':!popout, 'col-md-8':!popout, 'col-lg-6':!popout, 'col-xl-5':!popout, 'col-12':popout}">
 			<parts-map [parts]="parts" [work]="work" [heatmap]="allPerformancesSelected" (select)="clickMapPart($event)"></parts-map>
 		</div>
-		<div [ngClass]="{'col-sm-12':!popout, 'col-md-8':!popout, 'col-lg-6':!popout, 'col-12':popout}">
+		<div [ngClass]="{'col-sm-12':!popout, 'col-md-12':!popout, 'col-lg-6':!popout, 'col-xl-7':!popout, 'col-12':popout}">
 		<div *ngIf="showMap && selectedPart">
 			<div class="part" [ngClass]="{'highlighted': selectedPart.highlighted}"
 			(click)="clickPart(selectedPart)">
@@ -159,4 +161,5 @@
 		<li *ngFor="let pp of partPerformances">{{pp.performance.id}} / {{pp.part.id}}</li>
 	</ul> -->
 	</div>
+	<div class="blankAtBottom"></div>
 </div>

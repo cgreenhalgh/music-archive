@@ -43,16 +43,43 @@ video.hidden {
 	display: none;
 }
 
-iframe.hidden {
+.hidden {
 	display:none;
 }
 .appframe {
 	position: fixed;
-	bottom: 0;
-	right: 0;
-	width: 480px;
-	height: 800px;
-	border: 2px solid grey;
+	bottom: 3px;
+	right: 3px;
+	width: 317px;
+	height: 525px;
+	border: 3px solid grey;
+	border-radius: 3px;
 	background: black;
 	z-index: 10;
+}
+.appframeContent {
+	width: 480px;
+	height: 800px;
+    -ms-transform: scale(0.65);
+    -moz-transform: scale(0.65);
+    -o-transform: scale(0.65);
+    -webkit-transform: scale(0.65);
+    transform: scale(0.65);
+
+    -ms-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+.containerShiftLeft {
+	margin-left: 30px !important;
+}
+@media screen and (max-width: 1200px) {
+	.hideIfNotWide {
+		display:none;
+	}
+}
+.blankAtBottom {
+	height: 300px;
 }
