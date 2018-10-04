@@ -60,3 +60,12 @@ archive sends set performance (performance config JSON) to mvapp. Mvapp has to c
 archive sends part history updates to mvapp (either next stage (next) or list of all stages (back/change)). Mvapp has to cope with restart/rewind, e.g. by reload.
 
 archive sends app events on normal play only. Note, these are not currently included in archive logs?!
+
+## Playlist
+
+For integration
+- each playlist will be like a performance, with its own (virtual) timeline
+- playlist will have title like performance and author like performer
+- it will comprise an editable list of (initially) PartPerformances
+- later on these will become shorter clips if desired
+- drag'n'drop - add, edit/re-order
