@@ -3,7 +3,10 @@ export interface PlaylistItem {
   performance:string,
   part:string,
   offset?:number,
-  duration?:number
+  duration?:number,
+  currentTime?:number,
+  startTime?:number,
+  endTime?:number,
 }
 
 export class PlaylistInfo {

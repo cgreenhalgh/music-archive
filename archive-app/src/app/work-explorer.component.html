@@ -181,9 +181,9 @@
 		<div class="col-12">
 			<p *ngIf="!currentlyPlaying.clip || !currentlyPlaying.clip.recording">Sorry, the recording for this performance is not yet available</p>
 			<p>
-				<em *ngIf="!currentlyPlaying.isClip">{{currentlyPlaying.performance.label}}</em>: {{currentlyPlaying.performance.description}}<br>
-				<em *ngIf="currentlyPlaying.isClip">{{currentlyPlaying.performance.label}}</em>: {{currentlyPlaying.label}}<br>
-				<span *ngIf="currentlyPlaying.isClip">From <em>{{currentlyPlaying.realPerformance.label}}</em><br></span>
+				<span *ngIf="!currentlyPlaying.isClip"><em>{{currentlyPlaying.performance.label}}</em>: {{currentlyPlaying.performance.description}}<br></span>
+				<span *ngIf="currentlyPlaying.isClip"><em>{{currentlyPlaying.performance.label}}</em>: {{currentlyPlaying.label}}<br>
+				From <em>{{currentlyPlaying.realPerformance.label}}</em><br></span>
 				Performed by <span class="performer" *ngFor="let performer of (currentlyPlaying.isClip ? currentlyPlaying.realPerformance : currentlyPlaying.performance).performers">{{performer.label}} </span>
 			</p><p><em>{{currentlyPlaying.part.label}}</em>: {{currentlyPlaying.part.description}}</p>
 		</div>

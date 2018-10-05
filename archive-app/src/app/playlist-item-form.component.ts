@@ -24,6 +24,7 @@ export class PlaylistItemFormComponent implements OnChanges  {
   createForm() { 
     this.form = this.fb.group({
       title: ['', Validators.required ],
+      startTime: [''],
      });
   }
   ngOnChanges() {
@@ -48,6 +49,7 @@ export class PlaylistItemFormComponent implements OnChanges  {
       title: formModel.title,
       performance: this.item.performance,
       part: this.item.part,
+      startTime: (formModel.startTime ? Number(formModel.startTime) : null),
     }
     return saveItem;
   }
@@ -57,5 +59,11 @@ export class PlaylistItemFormComponent implements OnChanges  {
   }
   onDelete() {
     this.dodelete.emit(null);
+  }
+  resetStartTime() {
+    this.form.get('startTime').setValue(null);
+  }
+  setStartTime() {
+    this.form.get('startTime').setValue(this.item.currentTime);
   }
 }
