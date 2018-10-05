@@ -206,6 +206,8 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   playlistCount:number = 0;
   editingPlaylistInfo:PlaylistInfo;
   editingPlaylist:Playlist;
+  editingPlaylistItem:PlaylistItem;
+  editingClip:Clip;
   
   constructor(
 	private elRef:ElementRef,
@@ -1052,18 +1054,33 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       return;
     ev.preventDefault();
   }
-  playlistAddPartPerformance(playlist:Playlist, part:string,performance:string) {
+  playlistAddPartPerformance(playlist:Playlist, part:string,performance:string, title?:string): Clip {
       let pp = this.partPerformances.find(pp => pp.part.id == part && pp.performance.id == performance);
       if (!pp) {
         console.log('error: could not locate part performance '+performance+' '+part);
         return;
       }
       let clip = new Clip(playlist, pp);
+      if (title)
+        clip.label = title;
+      else {
+        clip.label = pp.part.label+' from '+pp.performance.label;
+        if (pp.performance.performers && pp.performance.performers.length>0) {
+          clip.label += ' by ';
+          for (var pi=0; pi<pp.performance.performers.length; pi++) {
+            let p = pp.performance.performers[pi];
+            if (pi>0)
+              clip.label += ', ';
+            clip.label += p.label;
+          }
+        }
+      }
       // duration so far
       let duration = this.partPerformances.filter(pp => pp.playlist === playlist).map(pp => pp.videoClip ? pp.duration : 0).reduce((a,b)=> a+b, 0);
       console.log('total duration was '+duration+' + '+clip.duration);
       clip.playlistOffset = duration;
       this.partPerformances.push(clip);
+      return clip;
   }
   dropOnPerformance(ev, pp:Performance) {
     if (!pp.isPlaylist) {
@@ -1077,17 +1094,33 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     if (!data)
       return;
     let info = JSON.parse(data);
-    // TODO handle Clip drop
     if ('PartPerformance'==info.type) {
       this.playlistAddPartPerformance(playlist, info.part, info.performance);
     }
+    else if ('Clip'==info.type) {
+      // handle Clip drop
+      // id, part, performance
+      if (!info.id || !info.part || !info.performance) {
+        console.log('error: ill-formed Clip dropped', info);
+        return;
+      }
+      let clip = this.playlistClips.find(c => c.id == info.id);
+      if (!clip) {
+        console.log(`error, could not find dropped clip ${info.id}`);
+        return;
+      }
+      // TODO offset, duration override?
+      let newclip = this.playlistAddPartPerformance(playlist, info.part, info.performance, info.title);
+    }
+    if (this.selectedPerformance === pp)
+      this.refreshSelectedPerformance();
   }
   clickClipPlay(ev,clip:Clip) {
     this.playInternal(clip.playlist, clip.part, clip);
   }
   dragClip(ev,clip:Clip) {
     // TODO playlist ID?
-    ev.dataTransfer.setData(DRAG_AND_DROP_MIME_TYPE,JSON.stringify({type:'Clip',id:clip.id,part:clip.part.id,performance:clip.realPerformance.id}))
+    ev.dataTransfer.setData(DRAG_AND_DROP_MIME_TYPE,JSON.stringify({type:'Clip',id:clip.id,part:clip.part.id,performance:clip.realPerformance.id,title:clip.label}))
   }
   dragoverClip(ev, clip:Clip) {
     ev.preventDefault();
@@ -1099,12 +1132,14 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     if (!data)
       return;
     let info = JSON.parse(data);
-    // TODO handle PartPerformance drop
     if ('PartPerformance'==info.type) {
       //this.playlistAddPartPerformance(playlist, info.part, info.performance);
+      // shouldn't happen!
+      console.log('error, PartPerformance drop on Clip');
+      return;
     }
     else if ('Clip'==info.type) {
-      // TODO handle Clip drop
+      // handle Clip drop
       // id, part, performance
       if (!info.id || !info.part || !info.performance) {
         console.log('error: ill-formed Clip dropped', info);
@@ -1170,7 +1205,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       this.deletePlaylistClips(this.editingPlaylist);
       for (var ix in info.items) {
         let item = info.items[ix];
-        this.playlistAddPartPerformance(this.editingPlaylist, item.part, item.performance);
+        this.playlistAddPartPerformance(this.editingPlaylist, item.part, item.performance, item.title);
       }
       if (this.editingPlaylist.selected) {
         this.refreshSelectedPerformance();
@@ -1216,5 +1251,59 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     }
     this.cancelEditingPlaylist();
   }   
+  editPlaylistItem($event,clip:Clip) {
+    console.log('edit clip', clip);
+    this.editingClip = clip;
+    this.editingPlaylistItem = { title: clip.label, performance: clip.realPerformance.id, part: clip.part.id }
+  }
+  saveEditingPlaylistItem(info:PlaylistItem) {
+    console.log('save editing playlist item', info);
+    if (!this.editingClip)
+      return;
+    this.editingClip.label = info.title;
+    this.cancelEditingPlaylistItem();
+  }
+  cancelEditingPlaylistItem() {
+    this.editingPlaylistItem = null;
+    this.editingClip = null;
+  }
+  deleteEditingPlaylistItem() {
+    if (!this.editingClip)
+      return;
+    
+    for (var ii=0; ii<this.partPerformances.length; ii++) {
+      let item = this.partPerformances[ii];
+      if (item === this.editingClip) {
+        this.partPerformances.splice(ii,1);
+        ii--;
+      }
+    }
+    if (this.selectedPerformance=== this.editingPlaylist) {
+      for (var ii=0; ii<this.playlistClips.length; ii++) {
+        let item = this.playlistClips[ii];
+        if (item === this.editingClip) {
+          this.playlistClips.splice(ii, 1);
+          ii--;
+        }
+      }
+    }
+    // times...
+    let otherClips = this.partPerformances.filter(pp => pp.performance === this.editingClip.performance && pp.isClip)
+      .sort((a,b) => a.playlistOffset - b.playlistOffset);
+    let playlistOffset = 0;
+    for (let ci=0; ci<otherClips.length; ci++) {
+      let c = otherClips[ci];
+      c.playlistOffset = playlistOffset;
+      if (!c.duration || c.duration<=0) {
+        console.log(`warning, clip ${ci} has duration ${c.duration}`)
+      }
+      playlistOffset += c.duration;
+    }
+    
+    if (this.currentlyPlaying === this.editingClip)
+      this.stop();
+    this.cancelEditingPlaylistItem();
+    this.refreshSelectedPerformance();
+  }
 }
 

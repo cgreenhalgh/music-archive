@@ -79,8 +79,10 @@
 				<span *ngIf="clip.active"><i class="material-icons">play_circle_filled</i></span>
 				<span *ngIf="!clip.active"><i class="material-icons">play_circle_outline</i></span>
 			</a>
-			{{clip.part.label}}
-			<span class="performer">{{clip.realPerformance.label}}</span>
+			{{clip.label}}
+			<a (click)="editPlaylistItem($event,clip)" class="pointer">
+				<i class="material-icons">edit</i>
+			</a>
 		</div>
 		<div [ngClass]="{'col-sm-12':!popout, 'col-md-12':!popout, 'col-lg-12':!popout, 'col-12':popout}">
 			<p *ngIf="selectedPart"><em>{{selectedPart.label}}</em>: {{selectedPart.description}}</p>
@@ -179,7 +181,8 @@
 		<div class="col-12">
 			<p *ngIf="!currentlyPlaying.clip || !currentlyPlaying.clip.recording">Sorry, the recording for this performance is not yet available</p>
 			<p>
-				<em>{{currentlyPlaying.performance.label}}</em>: {{currentlyPlaying.performance.description}}<br>
+				<em *ngIf="!currentlyPlaying.isClip">{{currentlyPlaying.performance.label}}</em>: {{currentlyPlaying.performance.description}}<br>
+				<em *ngIf="currentlyPlaying.isClip">{{currentlyPlaying.performance.label}}</em>: {{currentlyPlaying.label}}<br>
 				<span *ngIf="currentlyPlaying.isClip">From <em>{{currentlyPlaying.realPerformance.label}}</em><br></span>
 				Performed by <span class="performer" *ngFor="let performer of (currentlyPlaying.isClip ? currentlyPlaying.realPerformance : currentlyPlaying.performance).performers">{{performer.label}} </span>
 			</p><p><em>{{currentlyPlaying.part.label}}</em>: {{currentlyPlaying.part.description}}</p>
@@ -193,6 +196,10 @@
 	<div *ngIf="editingPlaylistInfo">
       <playlist-form (save)="saveEditingPlaylist($event)" (cancel)="cancelEditingPlaylist()" [disabled]="false"
        [playlist]="editingPlaylistInfo" (dodelete)="deleteEditingPlaylist()" (doexport)="exportEditingPlaylist($event)"></playlist-form>
+    </div>
+	<div *ngIf="editingPlaylistItem">
+      <playlist-item-form (save)="saveEditingPlaylistItem($event)" (cancel)="cancelEditingPlaylistItem()" [disabled]="false"
+       [item]="editingPlaylistItem" (dodelete)="deleteEditingPlaylistItem()"></playlist-item-form>
     </div>
 	
 </div>

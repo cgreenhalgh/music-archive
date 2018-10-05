@@ -13,6 +13,7 @@ import { PartsMapComponent } from './parts-map.component';
 import { RecordsService } from './records.service';
 import { LinkappsService } from './linkapps.service';
 import { PlaylistFormComponent } from './playlist-form.component';
+import { PlaylistItemFormComponent } from './playlist-item-form.component';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
@@ -23,6 +24,7 @@ import { AppRoutingModule } from './app-routing.module';
     WorkExplorerComponent,
     PerformanceDetailComponent,
     PartsMapComponent,
+    PlaylistItemFormComponent,
     PlaylistFormComponent
   ],
   imports: [

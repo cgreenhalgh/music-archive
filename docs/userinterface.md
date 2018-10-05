@@ -71,9 +71,6 @@ For integration
 - drag'n'drop - add, edit/re-order
 
 To do:
-- drag/drop clips to re-order
-- drop playlist on playlist (including list and map update)
-- clip title edit
 - clip start offset
 - clip duration
 - muzivisual support for playlist change, i.e. more careful about reload - check all stages
@@ -81,7 +78,14 @@ To do:
 - hint for drop tagets
 - feedback for successful drop
 
+Maybe:
+- drop playlist on playlist (including list and map update)
+- drop playlist on clip
+
 Done:
+- clip title edit
+- drop clip on playlist
+- drag/drop clips to re-order
 - currentlyplaying for clip: fix performed by
 - don't start playing after save/export playlist (due to select performance in order to update map etc)
 - playlist delete
