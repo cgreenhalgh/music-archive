@@ -457,6 +457,36 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   clickAllPerformancesCheckbox(event) {
     this.clickPerformanceCheckbox(event,null);
   }
+  refreshSelectedPerformance() {
+    if(!this.selectedPerformance) {
+      if (!this.selectedPart) {
+        for (var pi in this.parts) {
+          let p = this.parts[pi];
+          p.available = false;
+          p.active = false;
+        }
+      }
+      return;
+    }
+    for (var pi in this.parts) {
+      let p = this.parts[pi];
+      p.selected = false;
+    }
+    // clips?
+    if (this.selectedPerformance.isPlaylist) {
+      this.playlistClips = this.partPerformances.filter(pp => pp.performance === this.selectedPerformance && pp.isClip ).sort((a,b) => a.playlistOffset - b.playlistOffset) as Clip[];
+    } else {
+      this.playlistClips = [];
+    }
+    // available stages in this performance
+    for (var pi in this.parts) {
+      var part = this.parts[pi];
+      part.available = !!this.partPerformances.find(pp =>  pp.performance === this.selectedPerformance && pp.part === part);
+    }
+    // TODO visible w playlist??
+    //this.checkPopoutMediaVisible();
+    this.updateApp();
+  }
 	clickPerformanceCheckbox(event,perf) {
     if (perf!==null) {
       console.log('select performance '+perf.id);
@@ -1033,6 +1063,15 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       this.editingPlaylistInfo.items.push({title: item.label, performance: item.realPerformance.id, part: item.part.id});
     }
   }
+  deletePlaylistClips(playlist:Playlist) {
+      for (var ii=0; ii<this.partPerformances.length; ii++) {
+        let item = this.partPerformances[ii];
+        if (item.playlist === playlist) {
+          this.partPerformances.splice(ii,1);
+          ii--;
+        }
+      }
+  }
   saveEditingPlaylistInternal(info:PlaylistInfo) {
     if (this.editingPlaylist.selected) {
       this.stop();
@@ -1040,19 +1079,13 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     if (this.editingPlaylist) {
       this.editingPlaylist.label = info.title;
       //let items = this.partPerformances.filter(pp => pp.playlist === this.editingPlaylist).sort((a,b) => a.playlistOffset - b.playlistOffset);
-      for (var ii=0; ii<this.partPerformances.length; ii++) {
-        let item = this.partPerformances[ii];
-        if (item.playlist === this.editingPlaylist) {
-          this.partPerformances.splice(ii,1);
-          ii--;
-        }
-      }
+      this.deletePlaylistClips(this.editingPlaylist);
       for (var ix in info.items) {
         let item = info.items[ix];
         this.playlistAddPartPerformance(this.editingPlaylist, item.part, item.performance);
       }
       if (this.editingPlaylist.selected) {
-        this.clickPerformanceCheckbox(null, this.editingPlaylist);
+        this.refreshSelectedPerformance();
       }
     }
   }
@@ -1066,7 +1099,22 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     this.editingPlaylist = null;
   }
   deleteEditingPlaylist() {
-    // TODO
+    if (!this.editingPlaylist)
+      return;
+    this.deletePlaylistClips(this.editingPlaylist);
+    for (var pi=0; pi<this.performances.length; pi++) {
+      let perf = this.performances[pi];
+      if (perf === this.editingPlaylist) {
+        this.performances.splice(pi,1);
+        pi = pi-1;
+      }
+    }
+    if (this.selectedPerformance=== this.editingPlaylist) {
+      this.selectedPerformance = null;
+      this.playlistClips = [];
+    }
+    this.cancelEditingPlaylist();
+    this.refreshSelectedPerformance();
   }
   exportEditingPlaylist(info:PlaylistInfo) {
     this.saveEditingPlaylistInternal(info);

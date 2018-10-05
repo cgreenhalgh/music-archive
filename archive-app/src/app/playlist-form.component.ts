@@ -55,9 +55,6 @@ export class PlaylistFormComponent implements OnChanges  {
           alert('Sorry, that does not seem to be a valid playlist');
         }
         console.log('read playlist', info);
-        if (this.playlist.items) {
-          info.items = this.playlist.items.concat(info.items);
-        }
         this.playlist = info;
         this.rebuildForm();
       } catch(err) {

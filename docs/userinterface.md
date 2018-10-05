@@ -69,3 +69,21 @@ For integration
 - it will comprise an editable list of (initially) PartPerformances
 - later on these will become shorter clips if desired
 - drag'n'drop - add, edit/re-order
+
+To do:
+- drop playlist on playlist (including list and map update)
+- muzivisual support for playlist change, i.e. more careful about reload - check all stages
+- clip title edit
+- clip start offset
+- clip duration
+- drag/drop clips to re-order
+- muzivisual first stage that isn't basecamp! (for playlist)
+- playlist import removes old items
+- hint for drop tagets
+- feedback for successful drop
+
+Done:
+- currentlyplaying for clip: fix performed by
+- don't start playing after save/export playlist (due to select performance in order to update map etc)
+- playlist delete
+- import wipe old content
