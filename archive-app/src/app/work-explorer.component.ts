@@ -34,6 +34,7 @@ class Recording extends Entity {
 	lastTime:number = 0;
 	isVideo:boolean = false;
 	visible:boolean = false;
+  duration:number;
 	constructor(fields: object, performance:Performance) {
 		super(fields);
 		this.performance = performance;
@@ -133,6 +134,7 @@ class PartPerformance extends Entity {
   playlist:Playlist;
   playlistOffset:number;
   realPerformance:Performance;
+  duration:number;
 	constructor(fields:object, performance:Performance, part:Part) {
 		super(fields);
     if(!part) console.log('Error: create PP '+this.id+' with null part; fields:', fields);
@@ -150,17 +152,23 @@ class PartPerformance extends Entity {
 		this.currentTimeText = minus+(minutes)+':'+Math.floor(seconds/10)+(seconds%10);
 	}
 }
+var nextClip = 1;
 class Clip extends PartPerformance {
   realPartPerformance:PartPerformance;
   active:boolean = false;
   // TODO offset/duration
   constructor(playlist:Playlist, pp:PartPerformance) {
     super({},playlist,pp.part);
+    this.id = '_clip'+(nextClip++);
     this.startTime = pp.startTime;
     this.isClip = true;
     this.clip = pp.clip;
     this.audioClip = pp.audioClip;
     this.videoClip = pp.audioClip;
+    if (this.audioClip)
+      this.duration = this.audioClip.duration;
+    if (this.videoClip && (!this.duration || this.videoClip.duration < this.duration))
+      this.duration = this.videoClip.duration;
     this.playlist = playlist;
     this.realPartPerformance = pp;
     this.realPerformance = pp.performance;
@@ -257,10 +265,17 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
         //msg.venue = msg.venue.replace('_', ' ');
       }
       // stages in this performance
-      var parts = this.partPerformances.filter(pp => pp.performance===this.currentlyPlaying.performance &&
-         pp.startTime<=this.currentlyPlaying.startTime)
-        .sort((a,b)=>a.startTime-b.startTime).map(pp => pp.part.getValue("coll:part_id"));
-      msg.stages = parts;
+      if (!this.currentlyPlaying.isClip) {
+        var parts = this.partPerformances.filter(pp => pp.performance===this.currentlyPlaying.performance &&
+           pp.startTime<=this.currentlyPlaying.startTime)
+          .sort((a,b)=>a.startTime-b.startTime).map(pp => pp.part.getValue("coll:part_id"));
+        msg.stages = parts;
+      } else {
+        var parts = this.partPerformances.filter(pp => pp.performance===this.currentlyPlaying.performance &&
+           pp.playlistOffset<=this.currentlyPlaying.playlistOffset)
+          .sort((a,b)=>a.playlistOffset-b.playlistOffset).map(pp => pp.part.getValue("coll:part_id"));
+        msg.stages = parts;
+      }
       console.log('update app', msg);
       try {
         this.appframe.nativeElement.contentWindow.postMessage(JSON.stringify(msg), "*");
@@ -407,6 +422,8 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 				.map(p => p.startTime).sort().find(() => true);
 				let clip = new AudioClip(rec, startTime-recStartTime, endTime? endTime-startTime : null);
 				console.log('part '+pp.id+' is '+clip.start+'+'+clip.duration);
+        if (clip.duration && (!pp.duration || clip.duration < pp.duration))
+          pp.duration = clip.duration;
 				if (video) {
 					pp.videoClip = clip;
 					if (this.showVideo)
@@ -725,7 +742,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 			if (this.currentlyPlaying.performance.selected && !this.currentlyPlaying.isClip) {
 				// check best clip...
 				let nextPp = this.partPerformances.filter(pp=>pp.performance===this.currentlyPlaying.performance
-					&& (!pp.clip.duration || pp.startTime+pp.clip.duration-0.1>rec.lastTime+rec.startTime))
+					&& (!pp.duration || pp.startTime+pp.duration-0.1>rec.lastTime+rec.startTime))
 					.sort((a,b)=>a.startTime-b.startTime).find(()=>true);
 				if (!nextPp) {
 					console.log('no valid part to play');
@@ -745,12 +762,14 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
         let playlistTime = this.currentlyPlaying.playlistOffset + rec.lastTime+rec.startTime - this.currentlyPlaying.startTime;
         console.log('playlist time now '+playlistTime);
         let nextPp = this.partPerformances.filter(pp=>pp.performance===this.currentlyPlaying.performance
-          && (!pp.clip.duration || pp.playlistOffset+pp.clip.duration-0.1>playlistTime))
+          && (!pp.duration || pp.playlistOffset+pp.duration-0.1>playlistTime))
           .sort((a,b)=>a.playlistOffset-b.playlistOffset).find(()=>true);
+        this.partPerformances.filter(pp=>pp.performance===this.currentlyPlaying.performance)
+           .forEach(pp => console.log(`- clip ${pp.id} plo ${pp.playlistOffset} dir ${pp.duration}`))
         if (!nextPp) {
           console.log('no valid clip to play');
           this.pause();
-          let maxTime = this.currentlyPlaying.startTime+ (this.currentlyPlaying.clip.duration ? this.currentlyPlaying.clip.duration : 0) - rec.startTime;
+          let maxTime = this.currentlyPlaying.startTime+ (this.currentlyPlaying.duration ? this.currentlyPlaying.duration : 0) - rec.startTime;
           if (rec.lastTime > maxTime + 0.1)
             event.target.currentTime = maxTime;
         } else if (nextPp!==this.currentlyPlaying) {
@@ -759,7 +778,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
         }
       }
 			else if (this.currentlyPlaying.part.selected) {
-				if (this.currentlyPlaying.clip.duration && offset > this.currentlyPlaying.clip.duration) {
+				if (this.currentlyPlaying.duration && offset > this.currentlyPlaying.duration) {
 					// pause
 					this.pause();
 					event.target.currentTime = this.currentlyPlaying.startTime-rec.startTime;
@@ -778,6 +797,24 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 	audioCanplay(event,rec) {
 		console.log('canplay '+rec.id);
 		rec.canplay = true;
+    let duration = event.target.duration;
+    if (!rec.duration) {
+      rec.duration = duration;
+      this.partPerformances.forEach(pp => {
+        if (pp.audioClip.recording===rec && !pp.audioClip.duration) {
+          pp.audioClip.duration = duration-pp.audioClip.start;
+          if (!pp.duration || pp.duration > pp.audioClip.duration)
+            pp.duration = pp.audioClip.duration;
+          console.log(`fix duration of audioclip ${pp.id} ${pp.performance.id} ${pp.part.id} as ${pp.audioClip.duration}`);
+        }
+        if (pp.videoClip.recording===rec && !pp.videoClip.duration) {
+          pp.videoClip.duration = duration-pp.videoClip.start;
+          if (!pp.duration || pp.duration > pp.videoClip.duration)
+            pp.duration = pp.videoClip.duration;
+          console.log(`fix duration of videoclip ${pp.id} ${pp.performance.id} ${pp.part.id} as ${pp.videoClip.duration}`);
+        }
+      })
+    }
 		// shouldn't be needed?!
 		if (rec.shouldplay) {
 			console.log('play '+rec.id+' on canplay');
@@ -802,8 +839,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 			}
 		}
 	}
-	pause() {
-		if (this.currentlyPlaying) {
+	pause() {		if (this.currentlyPlaying) {
 			if (!!this.elRef) {
 				let audios = this.getMedia();
 				for (var ai=0; ai<audios.length; ai++) {
@@ -884,7 +920,10 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 				let ix = (options.indexOf(this.currentlyPlaying)+1) % options.length;
 				this.playInternal(options[ix].performance, options[ix].part);
 			} else {
-				let pp = this.partPerformances.filter(pp=>pp.performance===this.currentlyPlaying.performance && 
+        let pp = this.currentlyPlaying.isClip 
+         ? this.partPerformances.filter(pp=>pp.performance===this.currentlyPlaying.performance && 
+          pp.playlistOffset>this.currentlyPlaying.playlistOffset).sort((a,b)=>a.playlistOffset-b.playlistOffset).find(()=>true)
+				 : this.partPerformances.filter(pp=>pp.performance===this.currentlyPlaying.performance && 
 					pp.startTime>this.currentlyPlaying.startTime).sort((a,b)=>a.startTime-b.startTime).find(()=>true);
 				if (!!pp)
 					this.playInternal(pp.performance, pp.part);
@@ -899,7 +938,10 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 				let ix = (options.indexOf(this.currentlyPlaying)+options.length-1) % options.length;
 				this.playInternal(options[ix].performance, options[ix].part);
 			} else {
-				let pp = this.partPerformances.filter(pp=>pp.performance===this.currentlyPlaying.performance && 
+				let pp = this.currentlyPlaying.isClip 
+          ? this.partPerformances.filter(pp=>pp.performance===this.currentlyPlaying.performance && 
+          pp.playlistOffset<this.currentlyPlaying.playlistOffset).sort((a,b)=>b.playlistOffset-a.playlistOffset).find(()=>true)
+          : this.partPerformances.filter(pp=>pp.performance===this.currentlyPlaying.performance && 
 					pp.startTime<this.currentlyPlaying.startTime).sort((a,b)=>b.startTime-a.startTime).find(()=>true);
 				if (!!pp)
 					this.playInternal(pp.performance, pp.part);
@@ -1018,8 +1060,8 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       }
       let clip = new Clip(playlist, pp);
       // duration so far
-      let duration = this.partPerformances.filter(pp => pp.playlist === playlist).map(pp => pp.videoClip ? pp.videoClip.duration : 0).reduce((a,b)=> a+b, 0);
-      console.log('total duration was '+duration+' + '+(clip.videoClip ? clip.videoClip.duration : 0));
+      let duration = this.partPerformances.filter(pp => pp.playlist === playlist).map(pp => pp.videoClip ? pp.duration : 0).reduce((a,b)=> a+b, 0);
+      console.log('total duration was '+duration+' + '+clip.duration);
       clip.playlistOffset = duration;
       this.partPerformances.push(clip);
   }
@@ -1044,13 +1086,59 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     this.playInternal(clip.playlist, clip.part, clip);
   }
   dragClip(ev,clip:Clip) {
-    // TODO
+    // TODO playlist ID?
+    ev.dataTransfer.setData(DRAG_AND_DROP_MIME_TYPE,JSON.stringify({type:'Clip',id:clip.id,part:clip.part.id,performance:clip.realPerformance.id}))
   }
   dragoverClip(ev, clip:Clip) {
-    // TODO
+    ev.preventDefault();
   }
   dropOnClip(ev,clip:Clip) {
-    // TODO
+    ev.preventDefault();
+    let data = ev.dataTransfer.getData(DRAG_AND_DROP_MIME_TYPE);
+    console.log('Drop:', data);
+    if (!data)
+      return;
+    let info = JSON.parse(data);
+    // TODO handle PartPerformance drop
+    if ('PartPerformance'==info.type) {
+      //this.playlistAddPartPerformance(playlist, info.part, info.performance);
+    }
+    else if ('Clip'==info.type) {
+      // TODO handle Clip drop
+      // id, part, performance
+      if (!info.id || !info.part || !info.performance) {
+        console.log('error: ill-formed Clip dropped', info);
+        return;
+      }
+      // should be re-ordering with current playlist
+      let clipIds = this.playlistClips.map(c => c.id);
+      let targetIx = clipIds.indexOf(clip.id);
+      if (targetIx<0) {
+        console.log(`error: target clip ${clip.id} not found in current list`);
+        return;
+      }
+      let fromIx = clipIds.indexOf(info.id);
+      if (fromIx<0) {
+        console.log(`error: dropped clip ${info.id} not found in current list`);
+        return;
+      }
+      console.log(`move clip from ${fromIx} to ${targetIx}`)
+      let fromClip = this.playlistClips[fromIx];
+      this.playlistClips.splice(fromIx, 1);
+      if (targetIx>=fromIx)
+        targetIx--;
+      this.playlistClips.splice(targetIx, 0, fromClip);
+      let playlistOffset = 0;
+      for (let ci=0; ci<this.playlistClips.length; ci++) {
+        let c = this.playlistClips[ci];
+        c.playlistOffset = playlistOffset;
+        if (!c.duration || c.duration<=0) {
+          console.log(`warning, clip ${ci} has duration ${c.duration}`)
+        }
+        playlistOffset += c.duration;
+      }
+      this.refreshSelectedPerformance();
+    }
   }
   editPlaylist($event,playlist:Playlist) {
     console.log('edit playlist', playlist);

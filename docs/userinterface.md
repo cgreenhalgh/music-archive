@@ -71,14 +71,13 @@ For integration
 - drag'n'drop - add, edit/re-order
 
 To do:
+- drag/drop clips to re-order
 - drop playlist on playlist (including list and map update)
-- muzivisual support for playlist change, i.e. more careful about reload - check all stages
 - clip title edit
 - clip start offset
 - clip duration
-- drag/drop clips to re-order
+- muzivisual support for playlist change, i.e. more careful about reload - check all stages
 - muzivisual first stage that isn't basecamp! (for playlist)
-- playlist import removes old items
 - hint for drop tagets
 - feedback for successful drop
 
@@ -87,3 +86,5 @@ Done:
 - don't start playing after save/export playlist (due to select performance in order to update map etc)
 - playlist delete
 - import wipe old content
+- fix clip length to be consistent video vs audio
+- previous/next to/from summit don't work?
