@@ -859,13 +859,13 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     if (!rec.duration) {
       rec.duration = duration;
       this.partPerformances.forEach(pp => {
-        if (pp.audioClip.recording===rec && !pp.audioClip.duration) {
+        if (pp.audioClip && pp.audioClip.recording===rec && !pp.audioClip.duration) {
           pp.audioClip.duration = duration-pp.audioClip.start;
           if (!pp.duration || pp.duration > pp.audioClip.duration)
             pp.duration = pp.audioClip.duration;
           console.log(`fix duration of audioclip ${pp.id} ${pp.performance.id} ${pp.part.id} as ${pp.audioClip.duration}`);
         }
-        if (pp.videoClip.recording===rec && !pp.videoClip.duration) {
+        if (pp.videoClip && pp.videoClip.recording===rec && !pp.videoClip.duration) {
           pp.videoClip.duration = duration-pp.videoClip.start;
           if (!pp.duration || pp.duration > pp.videoClip.duration)
             pp.duration = pp.videoClip.duration;
