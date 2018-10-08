@@ -254,7 +254,10 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.queryParams
-      .subscribe((params:Params) => { if (params['popout']!==undefined) { this.popoutPlayer(); } } );
+      .subscribe((params:Params) => { 
+        if (params['popout']!==undefined) { this.popoutPlayer(); } 
+        if (params['meld']!==undefined) { this.linkappsService.openMeld(); } 
+      } );
     this.route.params
       .switchMap((params: Params) => this.recordsService.getWork(params['id']))
       .subscribe(work => this.initialiseForWork(work));
@@ -266,7 +269,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
           console.log('unknown linkapps event', ev);
         }
     })
-    this.appUrl = this.sanitizer.bypassSecurityTrustResourceUrl("http://localhost:8080/1/archive-muzivisual/?p=archive&archive=1");
+    this.appUrl = this.sanitizer.bypassSecurityTrustResourceUrl("http://localhost:8000/1/archive-muzivisual/?p=archive&archive=1");
   }
   ngOnDestroy(): void {
     // mainly for popout
@@ -607,6 +610,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		}
     this.checkPopoutMediaVisible();
     this.updateApp();
+    this.linkappsService.meldPerformance(perf.id);
 	}
 	clickPerformancePlay(event,perf) {
 		event.preventDefault();
@@ -715,6 +719,9 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 	}
 	playInternal(perf:Performance, part:Part, clip?:Clip) {
 		console.log('play '+perf.id+' '+part.id+(clip ? ' clip at '+clip.startTime : ''));
+        if (this.selectedPerformance !== perf)
+          this.linkappsService.meldPerformance(perf.id);
+        this.linkappsService.meldPart(part.id);
 		for (var pi in this.parts) {
 			let p = this.parts[pi];
 			p.active = p===part && !part.selected;

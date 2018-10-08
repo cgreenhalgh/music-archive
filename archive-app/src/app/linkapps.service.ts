@@ -5,6 +5,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 export class LinkappsService {
 	app:Window;
     messageEmitter:EventEmitter<any> = new EventEmitter();
+    meldWindow:Window;
 
 	constructor() {
 		console.log('created LinkappsService')
@@ -23,6 +24,22 @@ export class LinkappsService {
 	}
     getEmitter(): EventEmitter<any> {
         return this.messageEmitter;
+    }
+    openMeld() {
+        console.log('open meld');
+        this.meldWindow = window.open('http://localhost:8080/archive', 'window', null); 
+    }
+    meldPerformance(performanceid:string) {
+        if (!this.meldWindow)
+            return;
+        console.log(`set meld performance ${performanceid}`);
+        this.meldWindow.postMessage({type: "performance", payload:performanceid}, "*"); 
+    }
+    meldPart(partid:string) {
+        if (!this.meldWindow)
+            return;
+        console.log(`set meld part ${partid}`);
+        this.meldWindow.postMessage({type: "fragment", payload:partid}, "*");
     }
 //	openApp():void {
 //		console.log('open app window')
