@@ -819,6 +819,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 					this.currentlyPlaying.setCurrentTime(rec.lastTime+rec.startTime-this.currentlyPlaying.startTime);
 					this.currentlyPlaying.subevents.map(ev => ev.setAbsTime(rec.lastTime+rec.startTime));
                     this.updateApp();
+                    this.linkappsService.meldPart(nextPp.part.id);
 				}
 			}
       else if (this.currentlyPlaying.performance.selected && this.currentlyPlaying.isClip) {
