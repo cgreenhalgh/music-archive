@@ -159,6 +159,7 @@ var nextClip = 1;
 class Clip extends PartPerformance {
   realPartPerformance:PartPerformance;
   active:boolean = false;
+  hasStartOffset:boolean = false;
   // TODO offset/duration
   constructor(playlist:Playlist, pp:PartPerformance) {
     super({},playlist,pp.part);
@@ -176,6 +177,13 @@ class Clip extends PartPerformance {
     this.realPartPerformance = pp;
     this.realPerformance = pp.performance;
     this.subevents = pp.subevents;
+  }
+  setCurrentTime(time:number) {
+    if (this.realPartPerformance) {
+      super.setCurrentTime(time + this.startTime - this.realPartPerformance.startTime);
+    } else {
+      super.setCurrentTime(time);
+    }
   }
 }
 
@@ -549,12 +557,22 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 				this.currentlyPlaying.part.active = true;
 		}
 		if (!this.currentlyPlaying) {
-			var part = this.parts.find(p => p.available);
-		 	if (part) {
-				this.playInternal(perf, part);
-			} else {
-				this.recordings.forEach(r => r.visible = r.isVideo==this.showVideo && r.performance==perf);
-			}
+      if (perf.isPlaylist) {
+			  let pp = this.partPerformances.filter(p => p.performance === perf && p.isClip).sort((a,b) => a.playlistOffset - b.playlistOffset).find(p => true) as Clip;
+        if (pp) {
+          this.playInternal(perf, pp.part, pp);
+        } else {
+          this.recordings.forEach(r => r.visible = r.isVideo==this.showVideo && r.performance==perf);
+        }
+      }
+      else {
+        let part:Part = this.parts.find(p => p.available);
+  		 	if (part) {
+	  			this.playInternal(perf, part);
+		  	} else {
+			  	this.recordings.forEach(r => r.visible = r.isVideo==this.showVideo && r.performance==perf);
+			  }
+      }
 		}
     this.checkPopoutMediaVisible();
 	}
@@ -1060,7 +1078,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       return;
     ev.preventDefault();
   }
-  playlistAddPartPerformance(playlist:Playlist, part:string,performance:string, title?:string): Clip {
+  playlistAddPartPerformance(playlist:Playlist, part:string,performance:string, title?:string, startTime?:number): Clip {
       let pp = this.partPerformances.find(pp => pp.part.id == part && pp.performance.id == performance);
       if (!pp) {
         console.log('error: could not locate part performance '+performance+' '+part);
@@ -1081,6 +1099,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
           }
         }
       }
+      this.fixClipStartTime(clip, startTime);
       // duration so far
       let duration = this.partPerformances.filter(pp => pp.playlist === playlist).map(pp => pp.videoClip ? pp.duration : 0).reduce((a,b)=> a+b, 0);
       console.log('total duration was '+duration+' + '+clip.duration);
@@ -1186,10 +1205,15 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     this.editingPlaylist = playlist;
     this.editingPlaylistInfo = { title: playlist.label }
     this.editingPlaylistInfo.items = [];
-    let items = this.partPerformances.filter(pp => pp.playlist === this.editingPlaylist).sort((a,b) => a.playlistOffset - b.playlistOffset);
+    let items = this.partPerformances.filter(pp => pp.playlist === this.editingPlaylist && pp.isClip).sort((a,b) => a.playlistOffset - b.playlistOffset);
     for (let ii in items) {
-      let item = items[ii];
-      this.editingPlaylistInfo.items.push({title: item.label, performance: item.realPerformance.id, part: item.part.id});
+      let item = items[ii] as Clip;
+      let itemInfo : PlaylistItem = {title: item.label, performance: item.realPerformance.id, part: item.part.id};
+      // copy startTime
+      if (Math.abs(item.startTime - item.realPartPerformance.startTime) > 0.01) {
+        itemInfo.startTime = item.startTime - item.realPartPerformance.startTime;
+      }
+      this.editingPlaylistInfo.items.push(itemInfo);
     }
   }
   deletePlaylistClips(playlist:Playlist) {
@@ -1211,8 +1235,9 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       this.deletePlaylistClips(this.editingPlaylist);
       for (var ix in info.items) {
         let item = info.items[ix];
-        this.playlistAddPartPerformance(this.editingPlaylist, item.part, item.performance, item.title);
+        this.playlistAddPartPerformance(this.editingPlaylist, item.part, item.performance, item.title, item.startTime);
       }
+      this.fixPlaylistOffsets(this.editingPlaylist);
       if (this.editingPlaylist.selected) {
         this.refreshSelectedPerformance();
       }
@@ -1267,32 +1292,42 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     }
     this.pause();
     if (this.currentlyPlaying === clip && clip.clip.recording) {
-      this.editingPlaylistItem.currentTime = clip.clip.recording.lastTime - clip.clip.start;
+      // audio or video?
+      if (this.showVideo)
+        this.editingPlaylistItem.currentTime = clip.videoClip.recording.lastTime - clip.realPartPerformance.videoClip.start;
+      else
+        this.editingPlaylistItem.currentTime = clip.audioClip.recording.lastTime - clip.realPartPerformance.audioClip.start;
     }
+  }
+  fixClipStartTime(clip:Clip, startTime?:number) {
+    // set start time
+    if (!startTime)
+      startTime = 0;
+    clip.hasStartOffset = Math.abs(startTime) > 0.01;
+    clip.startTime = clip.realPartPerformance.startTime+startTime;
+    clip.duration = clip.realPartPerformance.duration - startTime;
+    //console.log(`clip startTime = ${this.editingClip}`)
+    if (clip.videoClip && clip.realPartPerformance.videoClip) {
+      clip.videoClip.start = clip.realPartPerformance.videoClip.start + startTime;
+      clip.videoClip.duration = clip.realPartPerformance.videoClip.duration - startTime;
+    }
+    if (clip.audioClip && clip.realPartPerformance.audioClip) {
+      clip.audioClip.start = clip.realPartPerformance.audioClip.start + startTime;
+      clip.audioClip.duration = clip.realPartPerformance.audioClip.duration - startTime;
+    }
+    if (clip.clip && clip.realPartPerformance.clip) {
+      clip.clip.start = clip.realPartPerformance.clip.start + startTime;
+      clip.clip.duration = clip.realPartPerformance.clip.duration - startTime;
+    }
+
   }
   saveEditingPlaylistItem(info:PlaylistItem) {
     console.log('save editing playlist item', info);
     if (!this.editingClip)
       return;
     this.editingClip.label = info.title;
-    // set start time
-    let startTime = info.startTime ? info.startTime : 0;
-    this.editingClip.startTime = this.editingClip.realPartPerformance.startTime+startTime;
-    this.editingClip.duration = this.editingClip.realPartPerformance.duration - startTime;
-    //console.log(`clip startTime = ${this.editingClip}`)
+    this.fixClipStartTime(this.editingClip, info.startTime);
     this.fixPlaylistOffsets(this.editingClip.performance);
-    if (this.editingClip.videoClip && this.editingClip.realPartPerformance.videoClip) {
-      this.editingClip.videoClip.start = this.editingClip.realPartPerformance.videoClip.start + startTime;
-      this.editingClip.videoClip.duration = this.editingClip.realPartPerformance.videoClip.duration - startTime;
-    }
-    if (this.editingClip.audioClip && this.editingClip.realPartPerformance.audioClip) {
-      this.editingClip.audioClip.start = this.editingClip.realPartPerformance.audioClip.start + startTime;
-      this.editingClip.audioClip.duration = this.editingClip.realPartPerformance.audioClip.duration - startTime;
-    }
-    if (this.editingClip.clip && this.editingClip.realPartPerformance.clip) {
-      this.editingClip.clip.start = this.editingClip.realPartPerformance.clip.start + startTime;
-      this.editingClip.clip.duration = this.editingClip.realPartPerformance.clip.duration - startTime;
-    }
     this.cancelEditingPlaylistItem();
   }
   cancelEditingPlaylistItem() {

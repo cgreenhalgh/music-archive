@@ -71,8 +71,6 @@ For integration
 - drag'n'drop - add, edit/re-order
 
 To do:
-- fix part time vs sub-event time display in clip with start offset
-- visual cue for start time
 - clip duration
 - muzivisual support for playlist change, i.e. more careful about reload - check all stages
 - muzivisual first stage that isn't basecamp! (for playlist)
@@ -84,6 +82,9 @@ Maybe:
 - drop playlist on clip
 
 Done:
+- persist start time
+- visual cue for start time
+- fix part time vs sub-event time display in clip with start offset
 - clip start offset
 - clip title edit
 - drop clip on playlist
