@@ -81,6 +81,7 @@
 			</a>
 			{{clip.label}}
 			<i class="material-icons" *ngIf="clip.hasStartOffset">navigate_before</i>
+			<i class="material-icons" *ngIf="clip.hasEndOffset">navigate_next</i>
 			<a (click)="editPlaylistItem($event,clip)" class="pointer">
 				<i class="material-icons">edit</i>
 			</a>

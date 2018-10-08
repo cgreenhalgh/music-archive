@@ -71,7 +71,6 @@ For integration
 - drag'n'drop - add, edit/re-order
 
 To do:
-- clip duration
 - muzivisual support for playlist change, i.e. more careful about reload - check all stages
 - muzivisual first stage that isn't basecamp! (for playlist)
 - hint for drop tagets
@@ -82,6 +81,7 @@ Maybe:
 - drop playlist on clip
 
 Done:
+- clip duration
 - persist start time
 - visual cue for start time
 - fix part time vs sub-event time display in clip with start offset

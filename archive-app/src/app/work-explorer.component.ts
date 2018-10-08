@@ -160,6 +160,7 @@ class Clip extends PartPerformance {
   realPartPerformance:PartPerformance;
   active:boolean = false;
   hasStartOffset:boolean = false;
+  hasEndOffset:boolean = false;
   // TODO offset/duration
   constructor(playlist:Playlist, pp:PartPerformance) {
     super({},playlist,pp.part);
@@ -1078,7 +1079,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       return;
     ev.preventDefault();
   }
-  playlistAddPartPerformance(playlist:Playlist, part:string,performance:string, title?:string, startTime?:number): Clip {
+  playlistAddPartPerformance(playlist:Playlist, part:string,performance:string, title?:string, startTime?:number, endTime?:number): Clip {
       let pp = this.partPerformances.find(pp => pp.part.id == part && pp.performance.id == performance);
       if (!pp) {
         console.log('error: could not locate part performance '+performance+' '+part);
@@ -1099,7 +1100,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
           }
         }
       }
-      this.fixClipStartTime(clip, startTime);
+      this.fixClipStartTimeAndDuration(clip, startTime, endTime);
       // duration so far
       let duration = this.partPerformances.filter(pp => pp.playlist === playlist).map(pp => pp.videoClip ? pp.duration : 0).reduce((a,b)=> a+b, 0);
       console.log('total duration was '+duration+' + '+clip.duration);
@@ -1134,8 +1135,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
         console.log(`error, could not find dropped clip ${info.id}`);
         return;
       }
-      // TODO offset, duration override?
-      let newclip = this.playlistAddPartPerformance(playlist, info.part, info.performance, info.title);
+      let newclip = this.playlistAddPartPerformance(playlist, info.part, info.performance, info.title, info.startTime, info.endTime);
     }
     if (this.selectedPerformance === pp)
       this.refreshSelectedPerformance();
@@ -1145,7 +1145,12 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   }
   dragClip(ev,clip:Clip) {
     // TODO playlist ID?
-    ev.dataTransfer.setData(DRAG_AND_DROP_MIME_TYPE,JSON.stringify({type:'Clip',id:clip.id,part:clip.part.id,performance:clip.realPerformance.id,title:clip.label}))
+    ev.dataTransfer.setData(DRAG_AND_DROP_MIME_TYPE,JSON.stringify({
+      type:'Clip',id:clip.id,part:clip.part.id,performance:clip.realPerformance.id,title:clip.label,
+      startTime: Math.abs(clip.startTime-clip.realPartPerformance.startTime)>0.01 ? clip.startTime-clip.realPartPerformance.startTime : null,
+      endTime: Math.abs(clip.startTime+clip.duration-(clip.realPartPerformance.startTime+clip.realPartPerformance.duration))>0.01 ?
+        clip.startTime+clip.duration-clip.realPartPerformance.startTime : null      
+    }))
   }
   dragoverClip(ev, clip:Clip) {
     ev.preventDefault();
@@ -1183,6 +1188,8 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
         return;
       }
       console.log(`move clip from ${fromIx} to ${targetIx}`)
+      if (fromIx==targetIx)
+        return;
       let fromClip = this.playlistClips[fromIx];
       this.playlistClips.splice(fromIx, 1);
       if (targetIx>=fromIx)
@@ -1209,9 +1216,12 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     for (let ii in items) {
       let item = items[ii] as Clip;
       let itemInfo : PlaylistItem = {title: item.label, performance: item.realPerformance.id, part: item.part.id};
-      // copy startTime
+      // copy startTime & endTime
       if (Math.abs(item.startTime - item.realPartPerformance.startTime) > 0.01) {
         itemInfo.startTime = item.startTime - item.realPartPerformance.startTime;
+      }
+      if (Math.abs(item.startTime + item.duration - (item.realPartPerformance.startTime+item.realPartPerformance.duration)) > 0.01) {
+        itemInfo.endTime = item.startTime + item.duration - item.realPartPerformance.startTime;
       }
       this.editingPlaylistInfo.items.push(itemInfo);
     }
@@ -1235,7 +1245,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       this.deletePlaylistClips(this.editingPlaylist);
       for (var ix in info.items) {
         let item = info.items[ix];
-        this.playlistAddPartPerformance(this.editingPlaylist, item.part, item.performance, item.title, item.startTime);
+        this.playlistAddPartPerformance(this.editingPlaylist, item.part, item.performance, item.title, item.startTime, item.endTime);
       }
       this.fixPlaylistOffsets(this.editingPlaylist);
       if (this.editingPlaylist.selected) {
@@ -1286,9 +1296,12 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     console.log('edit clip', clip);
     this.editingClip = clip;
     this.editingPlaylistItem = { title: clip.label, performance: clip.realPerformance.id, part: clip.part.id }
-    // copy startTime
+    // copy startTime endTime
     if (Math.abs(this.editingClip.startTime - this.editingClip.realPartPerformance.startTime) > 0.01) {
       this.editingPlaylistItem.startTime = this.editingClip.startTime - this.editingClip.realPartPerformance.startTime;
+    }
+    if (Math.abs(this.editingClip.startTime +this.editingClip.duration - (this.editingClip.realPartPerformance.startTime + this.editingClip.realPartPerformance.duration)) > 0.01) {
+      this.editingPlaylistItem.endTime = this.editingClip.startTime +this.editingClip.duration - this.editingClip.realPartPerformance.startTime;
     }
     this.pause();
     if (this.currentlyPlaying === clip && clip.clip.recording) {
@@ -1299,25 +1312,33 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
         this.editingPlaylistItem.currentTime = clip.audioClip.recording.lastTime - clip.realPartPerformance.audioClip.start;
     }
   }
-  fixClipStartTime(clip:Clip, startTime?:number) {
+  fixClipStartTimeAndDuration(clip:Clip, startTime?:number, endTime?:number) {
     // set start time
-    if (!startTime)
+    if (!startTime || startTime<0)
       startTime = 0;
+    if (startTime > clip.realPartPerformance.duration)
+      startTime = clip.realPartPerformance.duration;
+    if (!endTime || endTime > clip.realPartPerformance.duration)
+      endTime = clip.realPartPerformance.duration;
+    if (endTime<startTime)
+      endTime = startTime;
     clip.hasStartOffset = Math.abs(startTime) > 0.01;
+    clip.hasEndOffset = Math.abs(endTime - clip.realPartPerformance.duration) > 0.01;
     clip.startTime = clip.realPartPerformance.startTime+startTime;
-    clip.duration = clip.realPartPerformance.duration - startTime;
+    let duration = endTime - startTime;
+    clip.duration = duration;
     //console.log(`clip startTime = ${this.editingClip}`)
     if (clip.videoClip && clip.realPartPerformance.videoClip) {
       clip.videoClip.start = clip.realPartPerformance.videoClip.start + startTime;
-      clip.videoClip.duration = clip.realPartPerformance.videoClip.duration - startTime;
+      clip.videoClip.duration = duration;
     }
     if (clip.audioClip && clip.realPartPerformance.audioClip) {
       clip.audioClip.start = clip.realPartPerformance.audioClip.start + startTime;
-      clip.audioClip.duration = clip.realPartPerformance.audioClip.duration - startTime;
+      clip.audioClip.duration = duration;
     }
     if (clip.clip && clip.realPartPerformance.clip) {
       clip.clip.start = clip.realPartPerformance.clip.start + startTime;
-      clip.clip.duration = clip.realPartPerformance.clip.duration - startTime;
+      clip.clip.duration = duration;
     }
 
   }
@@ -1326,7 +1347,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     if (!this.editingClip)
       return;
     this.editingClip.label = info.title;
-    this.fixClipStartTime(this.editingClip, info.startTime);
+    this.fixClipStartTimeAndDuration(this.editingClip, info.startTime, info.endTime);
     this.fixPlaylistOffsets(this.editingClip.performance);
     this.cancelEditingPlaylistItem();
   }
