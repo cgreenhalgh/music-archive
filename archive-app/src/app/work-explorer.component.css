@@ -83,3 +83,39 @@ video.hidden {
 .blankAtBottom {
 	height: 300px;
 }
+.playlistFeedback {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted grey;
+  color: #005050;
+}
+
+.playlistFeedback .playlistFeedbackText {
+  /*visibility: hidden;*/
+  position: absolute;
+  width: auto;
+/*  background-color: #4f4;
+  color: #fff;
+  text-align: center;
+  padding: 2px;
+  border-radius: 5px; */
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1s;
+  top: 100%;
+   margin-left: 10px;
+  /*bottom: 20%*/;
+  /*margin-left: -60px;*/
+}
+
+.playlistFeedback .playlistFeedbackTextVisible {
+  /*visibility: visible;*/
+  opacity: 1;
+  transition: opacity .1s;
+}
+
+..playlistFeedback-top {
+  bottom: 90%;
+  /*margin-left: -60px;*/
+}
+

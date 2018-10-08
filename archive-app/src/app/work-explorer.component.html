@@ -24,6 +24,10 @@
 		</div>
 		<div [ngClass]="{'col-sm-6':!popout, 'col-md-4':!popout, 'col-12':popout, performance:true}" *ngFor="let perf of performances" [ngClass]="{'highlighted': perf.highlighted}"
 			(click)="clickPerformance(perf)" (dragover)="dragoverPerformance($event,perf)" (drop)="dropOnPerformance($event,perf)">
+			<div class="playlistFeedback">
+				<div *ngIf="perf.isPlaylist && perf.playlistFeedback" class="playlistFeedback playlistFeedbackText alert alert-success"
+				[ngClass]="{playlistFeedbackTextVisible : perf.playlistFeedbackVisible}">{{perf.playlistFeedback}}</div>
+			</div>
 			<a (click)="clickPerformanceCheckbox($event,perf)" class="pointer">
 				<i class="material-icons">{{perf.selected ? 'check_box' : 'check_box_outline_blank'}}</i>
 			</a>

@@ -69,9 +69,21 @@ class Performance extends ScreenEntity {
 }
 
 class Playlist extends Performance {
+  playlistFeedback:string;
+  playlistFeedbackVisible:boolean = false;
+  playlistFeedbackTimer = null;
   constructor(name:string) {
     super({'rdfs:label':name});
     this.isPlaylist = true;
+  }
+  showFeedback(feedback:string) {
+    this.playlistFeedback = feedback;
+    this.playlistFeedbackVisible = true;
+    if (this.playlistFeedbackTimer)
+      clearTimeout(this.playlistFeedbackTimer);
+    this.playlistFeedbackTimer = setTimeout(() => {
+      this.playlistFeedbackVisible = false;
+    }, 100);
   }
 }
 
@@ -1122,6 +1134,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     let info = JSON.parse(data);
     if ('PartPerformance'==info.type) {
       this.playlistAddPartPerformance(playlist, info.part, info.performance);
+      playlist.showFeedback('Added');
     }
     else if ('Clip'==info.type) {
       // handle Clip drop
@@ -1136,6 +1149,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
         return;
       }
       let newclip = this.playlistAddPartPerformance(playlist, info.part, info.performance, info.title, info.startTime, info.endTime);
+      playlist.showFeedback('Added');
     }
     if (this.selectedPerformance === pp)
       this.refreshSelectedPerformance();

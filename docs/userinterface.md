@@ -74,13 +74,13 @@ To do:
 - muzivisual support for playlist change, i.e. more careful about reload - check all stages
 - muzivisual first stage that isn't basecamp! (for playlist)
 - hint for drop tagets
-- feedback for successful drop
 
 Maybe:
 - drop playlist on playlist (including list and map update)
 - drop playlist on clip
 
 Done:
+- feedback for successful drop
 - clip duration
 - persist start time
 - visual cue for start time
