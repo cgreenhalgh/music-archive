@@ -606,6 +606,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       }
 		}
     this.checkPopoutMediaVisible();
+    this.updateApp();
 	}
 	clickPerformancePlay(event,perf) {
 		event.preventDefault();
