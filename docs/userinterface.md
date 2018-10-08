@@ -71,15 +71,15 @@ For integration
 - drag'n'drop - add, edit/re-order
 
 To do:
-- muzivisual support for playlist change, i.e. more careful about reload - check all stages
-- muzivisual first stage that isn't basecamp! (for playlist)
-- hint for drop tagets
 
 Maybe:
+- hint for drop tagets
 - drop playlist on playlist (including list and map update)
 - drop playlist on clip
 
 Done:
+- muzivisual support for playlist change, i.e. more careful about reload - check all stages
+- muzivisual first stage that isn't basecamp! (for playlist)
 - feedback for successful drop
 - clip duration
 - persist start time

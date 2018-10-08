@@ -81,9 +81,17 @@ class Playlist extends Performance {
     this.playlistFeedbackVisible = true;
     if (this.playlistFeedbackTimer)
       clearTimeout(this.playlistFeedbackTimer);
-    this.playlistFeedbackTimer = setTimeout(() => {
-      this.playlistFeedbackVisible = false;
-    }, 100);
+    let self = this;
+    function fn() {
+      self.playlistFeedbackTimer = null;
+      if (self.playlistFeedbackVisible) {
+        self.playlistFeedbackVisible = false;
+        self.playlistFeedbackTimer = setTimeout(fn, 1000);
+      } else {
+        self.playlistFeedback = null;
+      }
+    };
+    this.playlistFeedbackTimer = setTimeout(fn,100);
   }
 }
 
@@ -268,47 +276,57 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   clickShowApp(): void {
     this.showApp = !this.showApp;
   }
-  updateApp(): void {
+  updateApp2(performance:Performance, stages:string[]) {
     var msg:any = {version: 'mrl-music.archive/1.0', event: 'play.update'};
-    if (this.currentlyPlaying) {
-      if (this.currentlyPlaying.performance) {
-        // performance title
-        msg.performanceTitle = this.currentlyPlaying.performance.label;
-        msg.performanceId = this.currentlyPlaying.performance.getValue("coll:system_id");
-        if (this.currentlyPlaying.performance.performers) {
-          msg.performers = [];
-          for (var pi in this.currentlyPlaying.performance.performers) {
-            // performer(s)
-            var performer = this.currentlyPlaying.performance.performers[pi];
-            msg.performers.push(performer.label);
-          }
+    if (performance) {
+      // performance title
+      msg.performanceTitle = performance.label;
+      msg.performanceId = performance.getValue("coll:system_id");
+      if (performance.performers) {
+        msg.performers = [];
+        for (var pi in performance.performers) {
+          // performer(s)
+          var performer = performance.performers[pi];
+          msg.performers.push(performer.label);
         }
-        // TODO venue -> label
-        msg.venue = this.currentlyPlaying.performance.getValue("crm:P7_took_place_at");
-        // e.g."Place/Djanogly_Recital_Hall"
-        //if (msg.venue.substring(0,6)=='Place/')
-        //  msg.venue = msg.venue.substring(6);
-        //msg.venue = msg.venue.replace('_', ' ');
       }
-      // stages in this performance
-      if (!this.currentlyPlaying.isClip) {
-        var parts = this.partPerformances.filter(pp => pp.performance===this.currentlyPlaying.performance &&
-           pp.startTime<=this.currentlyPlaying.startTime)
-          .sort((a,b)=>a.startTime-b.startTime).map(pp => pp.part.getValue("coll:part_id"));
-        msg.stages = parts;
-      } else {
-        var parts = this.partPerformances.filter(pp => pp.performance===this.currentlyPlaying.performance &&
-           pp.playlistOffset<=this.currentlyPlaying.playlistOffset)
-          .sort((a,b)=>a.playlistOffset-b.playlistOffset).map(pp => pp.part.getValue("coll:part_id"));
-        msg.stages = parts;
-      }
+      // TODO venue -> label
+      msg.venue = performance.getValue("crm:P7_took_place_at");
+      // e.g."Place/Djanogly_Recital_Hall"
+      //if (msg.venue.substring(0,6)=='Place/')
+      //  msg.venue = msg.venue.substring(6);
+      //msg.venue = msg.venue.replace('_', ' ');
+    }
+    msg.stages = stages;
+    if (performance || stages) {
       console.log('update app', msg);
       try {
         this.appframe.nativeElement.contentWindow.postMessage(JSON.stringify(msg), "*");
       } catch (err) {
         console.log('error updating app window', err);
+      }  
+    }
+  }
+  updateApp(): void {
+    if (this.currentlyPlaying) {
+      // stages in this performance
+      var stages:string[];
+      if (!this.currentlyPlaying.isClip) {
+        var parts = this.partPerformances.filter(pp => pp.performance===this.currentlyPlaying.performance &&
+           pp.startTime<=this.currentlyPlaying.startTime)
+          .sort((a,b)=>a.startTime-b.startTime).map(pp => pp.part.getValue("coll:part_id"));
+        stages = parts;
+      } else {
+        var parts = this.partPerformances.filter(pp => pp.performance===this.currentlyPlaying.performance &&
+           pp.playlistOffset<=this.currentlyPlaying.playlistOffset)
+          .sort((a,b)=>a.playlistOffset-b.playlistOffset).map(pp => pp.part.getValue("coll:part_id"));
+        stages = parts;
       }
+      this.updateApp2(this.currentlyPlaying.performance, stages);
     } 
+    else if (this.selectedPerformance) {
+      this.updateApp2(this.selectedPerformance, []);
+    }
   }
   popoutPlayer(): void {
     console.log('popout player');
