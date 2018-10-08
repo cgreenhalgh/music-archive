@@ -574,7 +574,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 			perf.selected = true;
 		this.selectedPerformance = perf;
     // clips?
-    if (this.selectedPerformance.isPlaylist) {
+    if (this.selectedPerformance && this.selectedPerformance.isPlaylist) {
       this.playlistClips = this.partPerformances.filter(pp => pp.performance === perf && pp.isClip ).sort((a,b) => a.playlistOffset - b.playlistOffset) as Clip[];
     } else {
       this.playlistClips = [];
@@ -591,7 +591,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 				this.currentlyPlaying.part.active = true;
 		}
 		if (!this.currentlyPlaying) {
-      if (perf.isPlaylist) {
+      if (perf && perf.isPlaylist) {
 			  let pp = this.partPerformances.filter(p => p.performance === perf && p.isClip).sort((a,b) => a.playlistOffset - b.playlistOffset).find(p => true) as Clip;
         if (pp) {
           this.playInternal(perf, pp.part, pp);
@@ -610,7 +610,9 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		}
     this.checkPopoutMediaVisible();
     this.updateApp();
-    this.linkappsService.meldPerformance(perf.id);
+    if (perf) {
+      this.linkappsService.meldPerformance(perf.id);
+    }
 	}
 	clickPerformancePlay(event,perf) {
 		event.preventDefault();
