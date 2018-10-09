@@ -27,19 +27,24 @@ export class LinkappsService {
     }
     openMeld() {
         console.log('open meld');
-        this.meldWindow = window.open('http://localhost:8080/archive', 'window', null); 
+        this.meldWindow = window.open('http://localhost:8080/archive', 'meldwindow', null); 
     }
-    meldPerformance(performanceid:string) {
+    meldPartPerformance(partid:string, performanceid:string) {
         if (!this.meldWindow)
             return;
-        console.log(`set meld performance ${performanceid}`);
-        this.meldWindow.postMessage({type: "performance", payload:performanceid}, "*"); 
-    }
-    meldPart(partid:string) {
-        if (!this.meldWindow)
-            return;
-        console.log(`set meld part ${partid}`);
-        this.meldWindow.postMessage({type: "fragment", payload:partid}, "*");
+        if (!performanceid)
+          return;
+        if (partid) {
+          partid = partid.replace('Climb_', '');
+        }
+        else {
+          partid = 'basecamp';
+        }
+        console.log(`set meld part ${partid} performance ${performanceid}`);
+        // avoid: race
+        //this.meldWindow.postMessage({type: "performance", payload:performanceid}, "*"); 
+        //this.meldWindow.postMessage({type: "fragment", payload:partid}, "*");
+        this.meldWindow = window.open('http://localhost:8080/archive?perf='+encodeURIComponent(performanceid)+'&frag='+encodeURIComponent(partid), 'meldwindow', null); 
     }
 //	openApp():void {
 //		console.log('open app window')

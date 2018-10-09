@@ -610,9 +610,6 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		}
     this.checkPopoutMediaVisible();
     this.updateApp();
-    if (perf) {
-      this.linkappsService.meldPerformance(perf.id);
-    }
 	}
 	clickPerformancePlay(event,perf) {
 		event.preventDefault();
@@ -721,9 +718,10 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 	}
 	playInternal(perf:Performance, part:Part, clip?:Clip) {
 		console.log('play '+perf.id+' '+part.id+(clip ? ' clip at '+clip.startTime : ''));
-        if (this.selectedPerformance !== perf)
-          this.linkappsService.meldPerformance(perf.id);
-        this.linkappsService.meldPart(part.id);
+    if (clip) 
+      this.linkappsService.meldPartPerformance(part.id, clip.realPerformance.id);
+    else
+      this.linkappsService.meldPartPerformance(part.id, perf.id);
 		for (var pi in this.parts) {
 			let p = this.parts[pi];
 			p.active = p===part && !part.selected;
@@ -819,7 +817,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 					this.currentlyPlaying.setCurrentTime(rec.lastTime+rec.startTime-this.currentlyPlaying.startTime);
 					this.currentlyPlaying.subevents.map(ev => ev.setAbsTime(rec.lastTime+rec.startTime));
                     this.updateApp();
-                    this.linkappsService.meldPart(nextPp.part.id);
+                    this.linkappsService.meldPartPerformance(nextPp.part.id, nextPp.performance.id);
 				}
 			}
       else if (this.currentlyPlaying.performance.selected && this.currentlyPlaying.isClip) {
