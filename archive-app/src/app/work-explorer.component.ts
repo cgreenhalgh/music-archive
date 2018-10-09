@@ -269,7 +269,8 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
           console.log('unknown linkapps event', ev);
         }
     })
-    this.appUrl = this.sanitizer.bypassSecurityTrustResourceUrl("http://localhost:8000/1/archive-muzivisual/?p=archive&archive=1");
+    // local test http://localhost:8000/...
+    this.appUrl = this.sanitizer.bypassSecurityTrustResourceUrl("/1/archive-muzivisual/?p=archive&archive=1");
   }
   ngOnDestroy(): void {
     // mainly for popout
