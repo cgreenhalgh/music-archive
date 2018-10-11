@@ -187,9 +187,12 @@ class Clip extends PartPerformance {
     this.id = '_clip'+(nextClip++);
     this.startTime = pp.startTime;
     this.isClip = true;
-    this.audioClip = new AudioClip(pp.audioClip.recording, pp.audioClip.start, pp.audioClip.duration);
-    this.clip = new AudioClip(pp.clip.recording, pp.clip.start, pp.clip.duration);
-    this.videoClip = new AudioClip(pp.videoClip.recording, pp.videoClip.start, pp.videoClip.duration);
+    this.audioClip = pp.audioClip ? new AudioClip(pp.audioClip.recording, pp.audioClip.start, pp.audioClip.duration) : null;
+    this.videoClip = pp.videoClip ? new AudioClip(pp.videoClip.recording, pp.videoClip.start, pp.videoClip.duration) : null;
+    if (pp.clip === pp.audioClip)
+      this.clip = this.audioClip;
+    else if (pp.clip === pp.videoClip)
+      this.clip = this.videoClip;
     if (this.audioClip)
       this.duration = this.audioClip.duration;
     if (this.videoClip && (!this.duration || this.videoClip.duration < this.duration))
@@ -761,7 +764,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 					console.log('media '+ai+' visible!');
 					// start time...
 					var partOffset = 0;
-					if (!!wasPlaying && wasPlaying.part===part && wasPlaying!==this.currentlyPlaying && !clip) {
+					if (!!wasPlaying && wasPlaying.part===part && wasPlaying!==this.currentlyPlaying && wasPlaying.clip && !clip) {
 						// same time in part?
 						partOffset = wasPlaying.clip.recording.lastTime + wasPlaying.clip.recording.startTime 
 						- wasPlaying.startTime;
@@ -892,7 +895,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		console.log('seeked '+rec.id);
 	}
 	play() {
-		if (!!this.currentlyPlaying && !this.currentlyPlaying.clip.recording.shouldplay) {
+		if (!!this.currentlyPlaying && this.currentlyPlaying.clip && !this.currentlyPlaying.clip.recording.shouldplay) {
 			this.currentlyPlaying.clip.recording.shouldplay = true;
 			if (!!this.elRef) {
 				let audios = this.getMedia();
@@ -943,7 +946,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		return null;
 	}
 	forward() {
-		if (!!this.currentlyPlaying) {
+		if (!!this.currentlyPlaying && this.currentlyPlaying.clip) {
 			let audio = this.getAudio(this.currentlyPlaying.clip.recording);
 			if (!!audio) {
 				let currentTime = audio.currentTime;
@@ -957,7 +960,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		}
 	}
 	back() {
-		if (!!this.currentlyPlaying) {
+		if (!!this.currentlyPlaying && this.currentlyPlaying.clip) {
 			let audio = this.getAudio(this.currentlyPlaying.clip.recording);
 			if (!!audio) {
 				let currentTime = audio.currentTime;
@@ -1016,7 +1019,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		}
 	}
 	playSubevent(subevent) {
-		if (!!this.currentlyPlaying) {
+		if (!!this.currentlyPlaying && this.currentlyPlaying.clip) {
 			let audio = this.getAudio(this.currentlyPlaying.clip.recording);
 			if (!!audio) {
 				var time = subevent.startTime - this.currentlyPlaying.clip.recording.startTime - 3;
@@ -1346,12 +1349,9 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       this.editingPlaylistItem.endTime = this.editingClip.startTime +this.editingClip.duration - this.editingClip.realPartPerformance.startTime;
     }
     this.pause();
-    if (this.currentlyPlaying === clip && clip.clip.recording) {
+    if (this.currentlyPlaying === clip && clip.clip) {
       // audio or video?
-      if (this.showVideo)
-        this.editingPlaylistItem.currentTime = clip.videoClip.recording.lastTime - clip.realPartPerformance.videoClip.start;
-      else
-        this.editingPlaylistItem.currentTime = clip.audioClip.recording.lastTime - clip.realPartPerformance.audioClip.start;
+      this.editingPlaylistItem.currentTime = clip.clip.recording.lastTime - clip.realPartPerformance.clip.start;
     }
   }
   fixClipStartTimeAndDuration(clip:Clip, startTime?:number, endTime?:number) {
