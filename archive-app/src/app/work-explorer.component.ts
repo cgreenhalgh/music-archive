@@ -13,6 +13,10 @@ import { LinkappsService } from './linkapps.service';
 import { KioskService } from './kiosk.service';
 import { PlaylistInfo, PlaylistItem } from './types';
 
+// HACK
+const INTRO_VIDEO_URL = "http://localhost:8000/1/recordings/Climb_CHI2018.mp4"
+const INTRO_VIDEO_ID = "INTRO"
+
 class ScreenEntity extends Entity {
 	selected:boolean = false;
 	available:boolean = false;
@@ -245,6 +249,8 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   editingPlaylistItem:PlaylistItem;
   editingClip:Clip;
   kioskMode:boolean
+  introPlaying:boolean
+  showIntroVideo:boolean
   
   constructor(
 	private elRef:ElementRef,
@@ -434,6 +440,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		this.showVideo = value;
 		this.partPerformances.forEach(pp => pp.clip = (this.showVideo ? pp.videoClip : pp.audioClip) );
 		this.recordings.forEach(r => r.visible = r.isVideo==this.showVideo && (r.performance==this.selectedPerformance || (this.currentlyPlaying && this.currentlyPlaying.performance==r.performance)));
+		this.showIntroVideo = false
     this.checkPopoutMediaVisible();
 		if (this.currentlyPlaying) {
 			this.playInternal(this.currentlyPlaying.performance, this.currentlyPlaying.part);
@@ -608,6 +615,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 			  }
       }
 		}
+		this.showIntroVideo = false
     this.checkPopoutMediaVisible();
     this.updateApp();
 	}
@@ -704,6 +712,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 				this.recordings.forEach(r => r.visible = false );
 			}
 		}
+		this.showIntroVideo = false
     this.checkPopoutMediaVisible();
 	}
 	clickPartPlay(event,part) {
@@ -749,6 +758,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 			console.log('no '+(this.showVideo ? 'video' : 'audio')+' recording for performance '+realPerf.id);
 		}
 		this.recordings.forEach(r => r.visible = r==rec );
+		this.showIntroVideo = false
     this.checkPopoutMediaVisible();
 		if (!!this.elRef) {
 			let media = this.getMedia();
@@ -1054,6 +1064,18 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     parent.appendChild(video);
     
   }
+  addIntroVideo() {
+    let parent = this.popout.document.body;
+    let video = this.popout.document.createElement('video');
+    video.setAttribute('id', INTRO_VIDEO_ID);
+    this.renderer.listen(video, 'ended', (event) => this.ngZone.run(() => this.introEnded()));
+    let url = this.popout.document.createElement('source');
+    url.setAttribute('src', INTRO_VIDEO_URL);
+    url.setAttribute('type', 'video/mp4');
+    video.appendChild(url);
+    parent.appendChild(video);
+    this.introPlaying = false
+  }
   createPopoutMedia() {
     console.log('create popout media...');
 /*
@@ -1067,42 +1089,53 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       }
     }
 */
+ 	  this.showIntroVideo = true
     this.checkPopoutMediaVisible();
   }
   checkPopoutMediaVisible() {
     if (!this.popout)
       return;
 
+    let video = this.popout.document.getElementById(INTRO_VIDEO_ID);
+    if (!!video && !this.showIntroVideo) {
+    	this.removeVideo(video)
+      this.introPlaying = false
+    } 
+    if (!video && this.showIntroVideo)
+    	this.addIntroVideo()
     for (let rec of this.recordings) {
-      let video = this.popout.document.getElementById(rec.id);
+      video = this.popout.document.getElementById(rec.id);
       if (!!video) {
         //video.className = rec.visible ? '' : 'hidden';
         // make / remove - only one visible
         if (!rec.visible) {
-          try {
-            // https://stackoverflow.com/questions/28105950/html5-video-stalled-event
-            // clear src and load??
-            (video as HTMLVideoElement).pause();
-            let srcs = video.getElementsByTagName('source');
-            for (let si=0; si<srcs.length; si++) {
-              let src = srcs.item(si);
-              src.setAttribute('src', '');
-            }
-            if (srcs.length===0) {
-              console.log('could not find source element in video (to stop)');
-            }
-            (video as HTMLVideoElement).load();
-          }
-          catch (err) {
-            console.log('Error removing video: '+err.message, err);
-          }
-          video.remove();
+        	this.removeVideo(video)
         }
       } else if (rec.visible) {
         // create
         this.addPopoutVideo(rec);
       }
     }
+  }
+  removeVideo(video) {
+    try {
+      // https://stackoverflow.com/questions/28105950/html5-video-stalled-event
+      // clear src and load??
+      (video as HTMLVideoElement).pause();
+      let srcs = video.getElementsByTagName('source');
+      for (let si=0; si<srcs.length; si++) {
+        let src = srcs.item(si);
+        src.setAttribute('src', '');
+      }
+      if (srcs.length===0) {
+        console.log('could not find source element in video (to stop)');
+      }
+      (video as HTMLVideoElement).load();
+    }
+    catch (err) {
+      console.log('Error removing video: '+err.message, err);
+    }
+    video.remove();
   }
   clickPlaylistAdd(ev) {
     this.performances.push(new Playlist('Playlist '+(++this.playlistCount)));
@@ -1438,6 +1471,50 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
       }
       playlistOffset += c.duration;
     }
+  }
+  replayIntro() {
+  	this.clickAllPerformancesCheckbox(null)
+		this.showIntroVideo = true
+		this.recordings.forEach((r) => r. visible = false)
+		this.checkPopoutMediaVisible()
+    let video = this.popout.document.getElementById(INTRO_VIDEO_ID);
+		if (!!video) {
+			(video as HTMLVideoElement).currentTime = 0;
+			// FOR TESTING
+			//(video as HTMLVideoElement).currentTime = 3*60;
+			(video as HTMLVideoElement).play()
+			.then(() => this.ngZone.run(() => {console.log('replay intro ok'); this.introPlaying = true }))
+			.catch((err) => console.log(`error replaying intro: ${err.message}`))
+		}
+		else 
+			console.log('error: intro does not exist to replay')
+  }
+  playIntro() {
+    let video = this.popout.document.getElementById(INTRO_VIDEO_ID);
+		if (!!video) {
+			(video as HTMLVideoElement).play()
+			.then(() => this.ngZone.run(() => {console.log('play intro ok'); this.introPlaying = true }))
+			.catch((err) => console.log(`error replaying intro: ${err.message}`))
+		}
+		else {
+			console.log('no intro on play; replay...')
+			this.replayIntro()
+		}
+  }
+  pauseIntro() {
+    let video = this.popout.document.getElementById(INTRO_VIDEO_ID);
+		if (!!video) {
+			(video as HTMLVideoElement).pause()
+		}
+		this.introPlaying = false
+  }
+  introEnded() {
+  	console.log('intro ended')
+    let video = this.popout.document.getElementById(INTRO_VIDEO_ID);
+		if (!!video) {
+			(video as HTMLVideoElement).currentTime = 0;
+		}
+		this.introPlaying = false
   }
 }
 

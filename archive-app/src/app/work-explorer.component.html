@@ -1,4 +1,10 @@
-<div class="container" [ngClass]="{containerShiftLeft:showApp}" *ngIf="work"><h1>{{work.label}}</h1>
+<div class="container" [ngClass]="{containerShiftLeft:showApp}" *ngIf="work"><h1 [ngClass]="{kiosk: kioskMode}">{{work.label}} 
+		<span *ngIf="kioskMode" class="intro">Intro video 
+			<a (click)="playIntro()" ><i *ngIf="introPlaying && showIntroVideo" class="material-icons">play_circle_filled</i><i *ngIf="!introPlaying || !showIntroVideo" class="material-icons">play_circle_outline</i></a>
+			<a (click)="replayIntro()" *ngIf="showIntroVideo"><i class="material-icons">replay</i></a>
+			<a (click)="pauseIntro()" *ngIf="introPlaying && showIntroVideo"><i class="material-icons">pause_circle_outline</i></a>
+		</span>
+	</h1>
 <!-- <i class="material-icons">face</i> -->
 	<p *ngIf="!kioskMode"><a [routerLink]="['/work', work.id]">More about {{work.label}}...</a></p>
 	<p *ngIf="!showMap">Select <i class="material-icons">check_box_outline_blank</i> a Performance then play <i class="material-icons">play_circle_outline</i> its parts, or select <i class="material-icons">check_box_outline_blank</i> a Part then play <i class="material-icons">play_circle_outline</i> the different versions available.</p>
@@ -10,11 +16,12 @@
 		Show mobile app
 	</p>
 	<div [ngClass]="{appframe: true, hidden: !showApp}">
+		<div class="appframeHeading">Audience App</div>
 		<iframe #appframe [ngClass]="{appframeContent: true, hidden: !showApp}" [src]="appUrl"></iframe>
 	</div>
 	<div class="row">
 	<div [ngClass]="{'col-12': true}">
-	<h2>Performances <span *ngIf="!kiosk">and Playlists</span></h2>
+	<h2>Performances <span *ngIf="!kioskMode">and Playlists</span></h2>
 		<div class="row">
 		<div [ngClass]="{'col-sm-6':true, 'col-md-4':true, performance:true}" >
 			<a (click)="clickAllPerformancesCheckbox($event)" class="pointer">

@@ -12,7 +12,7 @@ COPY package-lock.json .
 RUN npm install
 
 COPY . .
-RUN `npm bin`/ng build -bh /1/archive/
+RUN `npm bin`/ng build --prod -bh /1/archive/
 RUN cd dist; tar zcf ../archive.tgz *
 
 # ng serve

@@ -1,4 +1,12 @@
 /* work-explorer */
+h1.kiosk {
+	padding-top: 0.2em;
+}
+span.intro {
+	font-size: 60%;
+	font-style: normal;
+	font-weight: 400;
+}
 .performance {
 	border: 1px solid rgba(128,128,128,0.2);
 }
@@ -49,13 +57,22 @@ video.hidden {
 .appframe {
 	position: fixed;
 	bottom: 3px;
+	padding-top: 4px;
+	padding-bottom: 1px;
 	right: 3px;
-	width: 317px;
-	height: 525px;
-	border: 3px solid grey;
-	border-radius: 3px;
+	width: 318px;
+	height: 558px;
+	border: 3px solid black;
+	border-radius: 5px;
 	background: black;
 	z-index: 10;
+}
+.appframeHeading {
+	height: 26px;
+	font-size: 16px;
+	color: white;
+	text-align: center;
+	padding-bottom: 3px;
 }
 .appframeContent {
 	width: 480px;
