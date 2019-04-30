@@ -1,9 +1,9 @@
 <div class="container" [ngClass]="{containerShiftLeft:showApp}" *ngIf="work"><h1>{{work.label}}</h1>
 <!-- <i class="material-icons">face</i> -->
-	<p><a [routerLink]="['/work', work.id]">More about {{work.label}}...</a></p>
+	<p *ngIf="!kioskMode"><a [routerLink]="['/work', work.id]">More about {{work.label}}...</a></p>
 	<p *ngIf="!showMap">Select <i class="material-icons">check_box_outline_blank</i> a Performance then play <i class="material-icons">play_circle_outline</i> its parts, or select <i class="material-icons">check_box_outline_blank</i> a Part then play <i class="material-icons">play_circle_outline</i> the different versions available.</p>
 	<p *ngIf="showMap">Select <i class="material-icons">check_box_outline_blank</i> a Performance then click on its parts, or a click on and select <i class="material-icons">check_box_outline_blank</i> a Part then play <i class="material-icons">play_circle_outline</i> the different versions available.</p>
-	<p  class="hideIfNotWide">
+	<p *ngIf="!kioskMode">
 		<a (click)="clickShowApp($event)" class="pointer">
 			<i class="material-icons">{{showApp ? 'check_box' : 'check_box_outline_blank'}}</i>
 		</a>
@@ -13,16 +13,16 @@
 		<iframe #appframe [ngClass]="{appframeContent: true, hidden: !showApp}" [src]="appUrl"></iframe>
 	</div>
 	<div class="row">
-	<div [ngClass]="{'col-12': !popout, 'col-lg-4': popout, 'col-md-6': popout}">
-	<h2>Performances and Playlists</h2>
+	<div [ngClass]="{'col-12': true}">
+	<h2>Performances <span *ngIf="!kiosk">and Playlists</span></h2>
 		<div class="row">
-		<div [ngClass]="{'col-sm-6':!popout, 'col-md-4':!popout, 'col-12':popout, performance:true}" >
+		<div [ngClass]="{'col-sm-6':true, 'col-md-4':true, performance:true}" >
 			<a (click)="clickAllPerformancesCheckbox($event)" class="pointer">
 				<i class="material-icons">{{allPerformancesSelected ? 'check_box' : 'check_box_outline_blank'}}</i>
 			</a>
 			All Performances
 		</div>
-		<div [ngClass]="{'col-sm-6':!popout, 'col-md-4':!popout, 'col-12':popout, performance:true}" *ngFor="let perf of performances" [ngClass]="{'highlighted': perf.highlighted}"
+		<div [ngClass]="{'col-sm-6':true, 'col-md-4':true, performance:true}" *ngFor="let perf of performances" [ngClass]="{'highlighted': perf.highlighted}"
 			(click)="clickPerformance(perf)" (dragover)="dragoverPerformance($event,perf)" (drop)="dropOnPerformance($event,perf)">
 			<div class="playlistFeedback">
 				<div *ngIf="perf.isPlaylist && perf.playlistFeedback" class="playlistFeedback playlistFeedbackText alert alert-success"
@@ -42,13 +42,13 @@
 				<i class="material-icons">edit</i>
 			</a>
 		</div>
-		<a (click)="clickPlaylistAdd($event)" class="pointer" [ngClass]="{'col-sm-6':!popout, 'col-md-4':!popout, 'col-12':popout, performance:true}" >
+		<a *ngIf="!kioskMode" (click)="clickPlaylistAdd($event)" class="pointer" [ngClass]="{'col-sm-6':true, 'col-md-4':true, 'col-12':false, performance:true}" >
 			<i class="material-icons">playlist_add</i>
 			New Playlist
 		</a>
 		</div>
 	</div>
-	<div [ngClass]="{'col-12': !popout, 'col-lg-4': popout, 'col-md-6': popout}">
+	<div [ngClass]="{'col-12': !popout || !showMap, 'col-sm-12': popout && showMap, 'col-md-8': popout && showMap, 'col-lg-6': popout && showMap, 'col-xl-5': popout && showMap}">
 	<!-- <p *ngIf="selectedPerformance"><em>{{selectedPerformance.label}}</em>: {{selectedPerformance.description}}</p>  -->
 	<h2>Parts (sections) 
 	<div class="btn-group">
@@ -57,7 +57,7 @@
 	</div>
 	</h2>
 	<div class="row" *ngIf="!showMap && (!selectedPerformance || !selectedPerformance.isPlaylist)">
-		<div [ngClass]="{'col-sm-6':!popout, 'col-md-4':!popout, part:true, 'col-lg-12':popout, 'col-md-12':popout}" *ngFor="let part of parts" [ngClass]="{'highlighted': part.highlighted}"
+		<div [ngClass]="{'col-sm-6':true, 'col-md-4':true, part:true}" *ngFor="let part of parts" [ngClass]="{'highlighted': part.highlighted}"
 			(click)="clickPart(part)">
 			<a (click)="clickPartCheckbox($event,part)" class="pointer">
 				<i class="material-icons">{{part.selected ? 'check_box' : 'check_box_outline_blank'}}</i>
@@ -70,13 +70,13 @@
 			</a>
 			{{part.label}}
 		</div>
-		<div [ngClass]="{'col-sm-12':!popout, 'col-md-12':!popout, 'col-lg-12':!popout, 'col-12':popout}">
+		<div [ngClass]="{'col-sm-12':true, 'col-md-12':true, 'col-lg-12':true}">
 			<p *ngIf="selectedPart"><em>{{selectedPart.label}}</em>: {{selectedPart.description}}</p>
 			<p *ngIf="!selectedPart && currentlyPlaying"><em>{{currentlyPlaying.part.label}}</em>: {{currentlyPlaying.part.description}}</p>
 		</div>
 	</div>
 	<div class="row" *ngIf="!showMap && selectedPerformance && selectedPerformance.isPlaylist">
-		<div [ngClass]="{'col-sm-6':!popout, 'col-md-4':!popout, part:true, 'col-lg-12':popout, 'col-md-12':popout}" *ngFor="let clip of playlistClips"
+		<div [ngClass]="{'col-sm-6':true, 'col-md-4':true, part:true}" *ngFor="let clip of playlistClips"
 			 (dragover)="dragoverClip($event,clip)" (drop)="dropOnClip($event,clip)">
 			<i class="material-icons" draggable="true" (dragstart)="dragClip($event,clip)">drag_indicator</i>
 			<a (click)="clickClipPlay($event,clip)" class="pointer">
@@ -90,7 +90,7 @@
 				<i class="material-icons">edit</i>
 			</a>
 		</div>
-		<div [ngClass]="{'col-sm-12':!popout, 'col-md-12':!popout, 'col-lg-12':!popout, 'col-12':popout}">
+		<div [ngClass]="{'col-sm-12':true, 'col-md-12':true, 'col-lg-12':true}">
 			<p *ngIf="selectedPart"><em>{{selectedPart.label}}</em>: {{selectedPart.description}}</p>
 			<p *ngIf="!selectedPart && currentlyPlaying"><em>{{currentlyPlaying.part.label}}</em>: {{currentlyPlaying.part.description}}</p>
 		</div>
@@ -148,7 +148,7 @@
  		</div>
 	</div>
 	</div>
-	<div [ngClass]="{'col-12': !popout, 'col-lg-4': popout, 'col-md-12': popout}">
+	<div [ngClass]="{'col-12': !popout, 'col-md-12': popout, 'col-lg-6': popout, 'col-xl-7': popout}">
  	<h2>Playing
 		<div class="btn-group" *ngIf="!popout">
 			<button class="btn btn-secondary" [ngClass]="{'active':!showVideo}" (click)="setShowVideo(false)">Audio</button>

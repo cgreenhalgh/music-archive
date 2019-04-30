@@ -24,15 +24,15 @@ See [logproc/](logproc/)
 dev
 ```
 cd ../archive-app
-npm install -g @angular/cli
-npm install --no-bin-links
-ng serve --host=0.0.0.0
+docker build -t archive-app .
+docker run -it --rm --name=archive-app -p 4200:4200 -p 9876:9876 \
+  archive-app /bin/bash
+`npm bin`/ng serve --host=0.0.0.0
 ```
 build
 ```
-ng build -bh /1/archive/
-cd dist
-tar zcf ../archive.tgz *
+docker run -it --rm --name=archive-app \
+  -v `pwd`:/root/work/output archive-app "cp archive.tgz /output/"
 ```
 Copy to server and unpack.
 

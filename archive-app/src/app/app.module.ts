@@ -12,6 +12,7 @@ import { PerformanceDetailComponent } from './performance-detail.component';
 import { PartsMapComponent } from './parts-map.component';
 import { RecordsService } from './records.service';
 import { LinkappsService } from './linkapps.service';
+import { KioskService } from './kiosk.service';
 import { PlaylistFormComponent } from './playlist-form.component';
 import { PlaylistItemFormComponent } from './playlist-item-form.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -35,7 +36,7 @@ import { AppRoutingModule } from './app-routing.module';
     HttpModule,
     NgbModule.forRoot()
   ],
-  providers: [RecordsService, LinkappsService],
+  providers: [RecordsService, LinkappsService, KioskService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

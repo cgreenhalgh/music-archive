@@ -1,4 +1,4 @@
-<nav
+<nav *ngIf="!kioskMode"
 	class="navbar navbar-inverse bg-inverse ">
 	<button class="navbar-toggler navbar-toggler-right" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed"
 		aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,7 +15,7 @@
 	</div>
 </nav>
 
-<div class="container">
+<div *ngIf="!kioskMode" class="container">
 	<ngb-alert type="info" (close)="closeResearchWarning()" *ngIf="!research.dismissed">{{research.warning}}</ngb-alert>
 </div>
 

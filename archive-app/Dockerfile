@@ -19,3 +19,5 @@ RUN cd dist; tar zcf ../archive.tgz *
 EXPOSE 4200
 # karma testing
 EXPOSE 9876
+
+VOLUME /root/work/output

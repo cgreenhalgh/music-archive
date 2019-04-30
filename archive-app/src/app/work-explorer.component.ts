@@ -10,6 +10,7 @@ import * as FileSaver from 'file-saver';
 import { Entity } from './entity';
 import { RecordsService }  from './records.service';
 import { LinkappsService } from './linkapps.service';
+import { KioskService } from './kiosk.service';
 import { PlaylistInfo, PlaylistItem } from './types';
 
 class ScreenEntity extends Entity {
@@ -243,6 +244,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   editingPlaylist:Playlist;
   editingPlaylistItem:PlaylistItem;
   editingClip:Clip;
+  kioskMode:boolean
   
   constructor(
 	private elRef:ElementRef,
@@ -252,13 +254,19 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private ngZone: NgZone,
     private linkappsService: LinkappsService,
-    private sanitizer: DomSanitizer
-  ) {}
+    private sanitizer: DomSanitizer,
+    private kioskService: KioskService
+  ) {
+  	this.kioskMode = kioskService.getKioskMode()
+  	if (this.kioskMode) {
+  		this.showApp = true
+  	}
+  }
 
   ngOnInit(): void {
     this.route.queryParams
       .subscribe((params:Params) => { 
-        if (params['popout']!==undefined) { this.popoutPlayer(); } 
+        if (params['popout']!==undefined || this.kioskMode) { this.popoutPlayer(); } 
         if (params['meld']!==undefined) { this.linkappsService.openMeld(); } 
       } );
     this.route.params
@@ -338,23 +346,11 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   popoutPlayer(): void {
     console.log('popout player');
     // Warning: not injected
-    this.popout = window.open('', 'archive_player'); //,'archive_player'|'_blank' 'scrollbars=no,status=no,menubar=no,width=720,height=480');
+    this.popout = window.open('assets/popoutplayer.html', 'archive_player'); //,'archive_player'|'_blank' 'scrollbars=no,status=no,menubar=no,width=720,height=480');
     //data:text/html,<html><head><title>Explorer player</title></head><body><div>hello</div></body></html>
     let init = () => {
-      if (!!this.popout.document.title) {
-        console.log('popout window initialised already as '+this.popout.document.title);
-        return;
-      }
-      console.log('initialise popout player window '+this.popout.document.title);
-      this.popout.document.title = 'Archive Player Window';
-      let css = 'video {\n width: 100%;\n height: auto;\n}\nvideo.hidden {\n display: none;\n}\nbody {\n background: black; \n}',
-        head = this.popout.document.head || this.popout.document.getElementsByTagName('head')[0],
-        style = this.popout.document.createElement('style');
-      style.type = 'text/css';
-      style.appendChild(document.createTextNode(css));
-      head.appendChild(style); 
+      console.log('popout window loaded as '+this.popout.document.title);
     }
-    init();
     this.popout.addEventListener('load', init, true); 
   }
 	initialiseForWork(work:Entity):void {
@@ -781,7 +777,9 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 						console.log('warning: clip start <0: '+this.currentlyPlaying.id+', '+this.currentlyPlaying.clip.start+'+'+partOffset);
 						audio.currentTime = 0;
 					}
-					audio.play();
+					audio.play()
+					.then(() => console.log('play ok'))
+					.catch((err) => console.log(`error playing: ${err.message}`))
 				} else {
 					audio.pause();
 				}
@@ -888,7 +886,9 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 		// shouldn't be needed?!
 		if (rec.shouldplay) {
 			console.log('play '+rec.id+' on canplay');
-			event.target.play();
+			event.target.play()
+			.then(() => console.log('play (canplay) ok'))
+			.catch((err) => console.log(`error playing (canplay): ${err.message}`))
 		}
 	}
 	audioSeeked(event,rec) {
@@ -903,7 +903,9 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 					let audio = audios[ai];
 					if (audio.id==this.currentlyPlaying.clip.recording.id) {
 						this.currentlyPlaying.clip.recording.shouldplay = true;
-						audio.play();
+						audio.play()
+						.then(() => console.log('play (play) ok'))
+						.catch((err) => console.log(`error playing (play): ${err.message}`))
 					}
 				}
 			}
