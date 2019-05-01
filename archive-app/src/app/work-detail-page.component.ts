@@ -17,7 +17,7 @@ export class WorkDetailPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params
-      .switchMap((params: Params) => { console.log(`work detail page for ${params['id']}`, params['id']); return [String(params['id'])])
+      .switchMap((params: Params) => { console.log(`work detail page for ${params['id']}`, params['id']); return [String(params['id'])] })
       .subscribe(id => { console.log(`=> ${id}`, id); this.id = id })
   }
 
