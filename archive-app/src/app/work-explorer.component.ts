@@ -3,7 +3,7 @@ import { Component, OnInit, ElementRef, NgZone, OnDestroy, ViewChild }      from
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location }               from '@angular/common';
-import { Renderer2 } from '@angular/core';
+import { Renderer2, isDevMode } from '@angular/core';
 
 import * as FileSaver from 'file-saver';
 
@@ -14,7 +14,8 @@ import { KioskService } from './kiosk.service';
 import { PlaylistInfo, PlaylistItem } from './types';
 
 // HACK
-const INTRO_VIDEO_URL = "http://localhost:8000/1/recordings/Climb_CHI2018.mp4"
+const INTRO_VIDEO_URL_DEV = "http://localhost:8000/1/recordings/Climb_CHI2018.mp4"
+const INTRO_VIDEO_URL_PROD = "/1/recordings/Climb_CHI2018.mp4"
 const INTRO_VIDEO_ID = "INTRO"
 
 class ScreenEntity extends Entity {
@@ -1070,7 +1071,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
     video.setAttribute('id', INTRO_VIDEO_ID);
     this.renderer.listen(video, 'ended', (event) => this.ngZone.run(() => this.introEnded()));
     let url = this.popout.document.createElement('source');
-    url.setAttribute('src', INTRO_VIDEO_URL);
+    url.setAttribute('src', isDevMode() ? INTRO_VIDEO_URL_DEV : INTRO_VIDEO_URL_PROD);
     url.setAttribute('type', 'video/mp4');
     video.appendChild(url);
     parent.appendChild(video);

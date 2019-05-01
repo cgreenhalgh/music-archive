@@ -32,7 +32,7 @@ docker run -it --rm --name=archive-app -p 4200:4200 -p 9876:9876 \
 build
 ```
 docker run -it --rm --name=archive-app \
-  -v `pwd`:/root/work/output archive-app "cp archive.tgz /output/"
+  -v `pwd`:/root/work/output archive-app cp archive.tgz output/
 ```
 Copy to server and unpack.
 
