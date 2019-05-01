@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { WorksComponent } from './works.component';
 import { WorkDetailComponent } from './work-detail.component';
+import { WorkDetailPageComponent } from './work-detail-page.component';
 import { WorkExplorerComponent } from './work-explorer.component';
 import { PerformanceDetailComponent } from './performance-detail.component';
 import { PartsMapComponent } from './parts-map.component';
@@ -22,6 +23,7 @@ import { AppRoutingModule } from './app-routing.module';
     AppComponent,
     WorksComponent,
     WorkDetailComponent,
+    WorkDetailPageComponent,
     WorkExplorerComponent,
     PerformanceDetailComponent,
     PartsMapComponent,

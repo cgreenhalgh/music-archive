@@ -1,4 +1,4 @@
-<div class="container" *ngIf="work"><h1>{{work.label}}</h1>
+<div *ngIf="work"><h1>{{work.label}}</h1>
 <!-- 	<p>By <a >{{}}</a></p> -->
 	<div [innerHTML]="work.description"></div>
 <!-- 
@@ -7,15 +7,15 @@
 		<li *ngFor="let perf of performances">{{perf.getValue('prov:startedAtTime')}}: <a  [routerLink]="['/performance', perf.id]">{{perf.label}}</a></li>
 	</ul>
 -->
-	<p>See also:</p>
-	<ul>
+	<p *ngIf="showLinks">See also:</p>
+	<ul *ngIf="showLinks">
 		<li *ngFor="let url of work.getValues('entity:seeAlso_r','rdfs:seeAlso')"><a href="{{url}}" target="_seealso">{{url}}</a></li>
 	</ul>
 	<div *ngFor="let composer of composers">
 		<h2>By {{composer.label}}</h2>
 		<div [innerHTML]="composer.description"></div>
-		<p>See also:</p>
-		<ul>
+		<p *ngIf="showLinks">See also:</p>
+		<ul *ngIf="showLinks">
 			<li *ngFor="let url of composer.getValues('entity:seeAlso_r','rdfs:seeAlso')"><a href="{{url}}" target="_seealso">{{url}}</a></li>
 		</ul>
 	</div>
@@ -24,5 +24,4 @@
 	<ul>
 		<li *ngFor="let part of parts">{{part.label}}: {{part.description}}</li>
 	</ul>
- 	<p><button (click)="goBack()">Back</button></p>
 </div>

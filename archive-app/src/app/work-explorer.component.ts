@@ -252,6 +252,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   kioskMode:boolean
   introPlaying:boolean
   showIntroVideo:boolean
+  showDetailModal:boolean
   
   constructor(
 	private elRef:ElementRef,
@@ -1516,6 +1517,12 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 			(video as HTMLVideoElement).currentTime = 0;
 		}
 		this.introPlaying = false
+  }
+  showDetail() {
+  	this.showDetailModal = true
+  }
+  hideDetail() {
+  	this.showDetailModal = false
   }
 }
 

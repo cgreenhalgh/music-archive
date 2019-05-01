@@ -1,7 +1,5 @@
 import 'rxjs/add/operator/switchMap';
-import { Component, OnInit }      from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Location }               from '@angular/common';
+import { Component, OnInit, OnChanges, Input, SimpleChange }      from '@angular/core';
 
 import { Entity } from './entity';
 import { RecordsService }  from './records.service';
@@ -10,7 +8,8 @@ import { RecordsService }  from './records.service';
   selector: 'work-detail',
   templateUrl: './work-detail.component.html'
 })
-export class WorkDetailComponent implements OnInit {
+export class WorkDetailComponent implements OnInit, OnChanges {
+	@Input() id: string
   work: Entity;
   performances: Entity[] = [];
   parts: Entity[] = [];
@@ -18,14 +17,15 @@ export class WorkDetailComponent implements OnInit {
 
   constructor(
     private recordsService: RecordsService,
-    private route: ActivatedRoute,
-    private location: Location
   ) {}
 
   ngOnInit(): void {
-    this.route.params
-      .switchMap((params: Params) => this.recordsService.getWork(params['id']))
-      .subscribe(work => { this.work = work; 
+  }
+  ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+  	if (changes['id'] && changes['id'].currentValue) {
+  		console.log(`work detail view for ${changes['id'].currentValue}`, changes)
+  		this.recordsService.getWork(changes['id'].currentValue)
+      .then(work => { this.work = work; 
         this.recordsService.getPerformancesOfWork(work)
         .then(performances => this.performances = performances
           .sort((a,b) => a.compareTo(b, 'prov:startedAtTime')));
@@ -36,10 +36,7 @@ export class WorkDetailComponent implements OnInit {
         .then(composers => this.composers = composers
           .sort((a,b) => a.compareTo(b, 'rdfs:label')));
       });
-  }
-
-  goBack(): void {
-    this.location.back();
+  	}
   }
 }
 

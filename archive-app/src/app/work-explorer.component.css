@@ -136,3 +136,61 @@ video.hidden {
   /*margin-left: -60px;*/
 }
 
+.moreButton {
+	border: solid 2px black;
+	background: #eee;
+	border-radius: 5px;
+	padding: 1px;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 50%;
+	font-style: normal;
+	font-weight: 400;
+	vertical-align: middle;
+}
+.showDetailOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 11;
+	opacity: 0.5;
+	background: white;
+}
+.showDetailModal {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	right: 20px;
+	bottom: 20px;
+	z-index: 12;
+	opacity: 1;
+	background: white;
+}
+.showDetailInner {
+	position: absolute;
+	top: 10px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border: 2px solid grey;
+	border-radius: 10px;
+	padding: 20px;
+}
+.showDetailCloser {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin-right: 10px;
+	margin-top: 10px;
+	z-index: 13;
+}
+.showDetailContent {
+	position: absolute;
+	top: 40px;
+	left: 20px;
+	right: 20px;
+	bottom: 0;
+	overflow: auto;
+}

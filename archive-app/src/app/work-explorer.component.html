@@ -1,10 +1,20 @@
 <div class="container" [ngClass]="{containerShiftLeft:showApp}" *ngIf="work"><h1 [ngClass]="{kiosk: kioskMode}">{{work.label}} 
+		<a *ngIf="kioskMode" class="moreButton" (click)="showDetail()">About {{work.label}}</a>
 		<span *ngIf="kioskMode" class="intro">Intro video 
 			<a (click)="playIntro()" ><i *ngIf="introPlaying && showIntroVideo" class="material-icons">play_circle_filled</i><i *ngIf="!introPlaying || !showIntroVideo" class="material-icons">play_circle_outline</i></a>
 			<a (click)="replayIntro()" *ngIf="showIntroVideo"><i class="material-icons">replay</i></a>
 			<a (click)="pauseIntro()" *ngIf="introPlaying && showIntroVideo"><i class="material-icons">pause_circle_outline</i></a>
 		</span>
 	</h1>
+	<div *ngIf="showDetailModal" class="showDetailOverlay"></div>
+	<div *ngIf="showDetailModal" class="showDetailModal">
+		<div class="showDetailInner">
+			<div class="showDetailCloser" (click)="hideDetail()"><i class="material-icons">close</i></div>
+			<div class="showDetailContent">
+				<work-detail [id]="work.id"></work-detail>
+			</div>
+		</div>
+	</div> 
 <!-- <i class="material-icons">face</i> -->
 	<p *ngIf="!kioskMode"><a [routerLink]="['/work', work.id]">More about {{work.label}}...</a></p>
 	<p *ngIf="!showMap">Select <i class="material-icons">check_box_outline_blank</i> a Performance then play <i class="material-icons">play_circle_outline</i> its parts, or select <i class="material-icons">check_box_outline_blank</i> a Part then play <i class="material-icons">play_circle_outline</i> the different versions available.</p>
