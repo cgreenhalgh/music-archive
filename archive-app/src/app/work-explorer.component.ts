@@ -601,6 +601,8 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 			else
 				this.currentlyPlaying.part.active = true;
 		}
+		this.showIntroVideo = false
+    this.checkPopoutMediaVisible();
 		if (!this.currentlyPlaying) {
       if (perf && perf.isPlaylist) {
 			  let pp = this.partPerformances.filter(p => p.performance === perf && p.isClip).sort((a,b) => a.playlistOffset - b.playlistOffset).find(p => true) as Clip;
@@ -619,8 +621,6 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
 			  }
       }
 		}
-		this.showIntroVideo = false
-    this.checkPopoutMediaVisible();
     this.updateApp();
 	}
 	clickPerformancePlay(event,perf) {
