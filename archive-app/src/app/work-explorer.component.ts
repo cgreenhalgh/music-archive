@@ -250,6 +250,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   editingPlaylistItem:PlaylistItem;
   editingClip:Clip;
   kioskMode:boolean
+  enablePlaylists:boolean = true
   introPlaying:boolean
   showIntroVideo:boolean
   showDetailModal:boolean
@@ -268,6 +269,7 @@ export class WorkExplorerComponent implements OnInit, OnDestroy {
   	this.kioskMode = kioskService.getKioskMode()
   	if (this.kioskMode) {
   		this.showApp = true
+  		this.enablePlaylists = false
   	}
   }
 

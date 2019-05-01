@@ -31,7 +31,7 @@
 	</div>
 	<div class="row">
 	<div [ngClass]="{'col-12': true}">
-	<h2>Performances <span *ngIf="!kioskMode">and Playlists</span></h2>
+	<h2>Performances <span *ngIf="enablePlaylists">and Playlists</span></h2>
 		<div class="row">
 		<div [ngClass]="{'col-sm-6':true, 'col-md-4':true, performance:true}" >
 			<a (click)="clickAllPerformancesCheckbox($event)" class="pointer">
@@ -59,7 +59,7 @@
 				<i class="material-icons">edit</i>
 			</a>
 		</div>
-		<a *ngIf="!kioskMode" (click)="clickPlaylistAdd($event)" class="pointer" [ngClass]="{'col-sm-6':true, 'col-md-4':true, 'col-12':false, performance:true}" >
+		<a *ngIf="enablePlaylists" (click)="clickPlaylistAdd($event)" class="pointer" [ngClass]="{'col-sm-6':true, 'col-md-4':true, 'col-12':false, performance:true}" >
 			<i class="material-icons">playlist_add</i>
 			New Playlist
 		</a>
@@ -79,7 +79,7 @@
 			<a (click)="clickPartCheckbox($event,part)" class="pointer">
 				<i class="material-icons">{{part.selected ? 'check_box' : 'check_box_outline_blank'}}</i>
 			</a>
-			<i *ngIf="part.available" class="material-icons" draggable="true" (dragstart)="dragPart($event,part)">drag_indicator</i>
+			<i *ngIf="part.available && enablePlaylists" class="material-icons" draggable="true" (dragstart)="dragPart($event,part)">drag_indicator</i>
 			<a (click)="clickPartPlay($event,part)" class="pointer">
 				<span *ngIf="part.active && part.available"><i class="material-icons">play_circle_filled</i></span>
 				<span *ngIf="!part.active && part.available"><i class="material-icons">play_circle_outline</i></span>
@@ -95,7 +95,7 @@
 	<div class="row" *ngIf="!showMap && selectedPerformance && selectedPerformance.isPlaylist">
 		<div [ngClass]="{'col-sm-6':true, 'col-md-4':true, part:true}" *ngFor="let clip of playlistClips"
 			 (dragover)="dragoverClip($event,clip)" (drop)="dropOnClip($event,clip)">
-			<i class="material-icons" draggable="true" (dragstart)="dragClip($event,clip)">drag_indicator</i>
+			<i *ngIf="enablePlaylists" class="material-icons" draggable="true" (dragstart)="dragClip($event,clip)">drag_indicator</i>
 			<a (click)="clickClipPlay($event,clip)" class="pointer">
 				<span *ngIf="clip.active"><i class="material-icons">play_circle_filled</i></span>
 				<span *ngIf="!clip.active"><i class="material-icons">play_circle_outline</i></span>
@@ -123,7 +123,7 @@
 				<a (click)="clickPartCheckbox($event,selectedPart)" class="pointer">
 					<i class="material-icons">{{selectedPart.selected ? 'check_box' : 'check_box_outline_blank'}}</i>
 				</a>
-				<i *ngIf="currentlyPlaying" class="material-icons" draggable="true" (dragstart)="dragPartPerformance($event,currentlyPlaying)">drag_indicator</i>
+				<i *ngIf="currentlyPlaying && enablePlaylists" class="material-icons" draggable="true" (dragstart)="dragPartPerformance($event,currentlyPlaying)">drag_indicator</i>
 				<a (click)="clickPartPlay($event,selectedPart)" class="pointer">
 					<span *ngIf="selectedPart.active && selectedPart.available"><i class="material-icons">play_circle_filled</i></span>
 					<span *ngIf="!selectedPart.active && selectedPart.available"><i class="material-icons">play_circle_outline</i></span>
@@ -139,7 +139,7 @@
 				<a (click)="clickPartCheckbox($event,currentlyPlaying.part)" class="pointer">
 					<i class="material-icons">{{currentlyPlaying.part.selected ? 'check_box' : 'check_box_outline_blank'}}</i>
 				</a>
-				<i class="material-icons" draggable="true" (dragstart)="dragPartPerformance($event,currentlyPlaying)">drag_indicator</i>
+				<i *ngIf="enablePlaylists" class="material-icons" draggable="true" (dragstart)="dragPartPerformance($event,currentlyPlaying)">drag_indicator</i>
 				<a (click)="clickPartPlay($event,currentlyPlaying.part)" class="pointer">
 					<span *ngIf="currentlyPlaying.part.active && currentlyPlaying.part.available"><i class="material-icons">play_circle_filled</i></span>
 					<span *ngIf="!currentlyPlaying.part.active && currentlyPlaying.part.available"><i class="material-icons">play_circle_outline</i></span>

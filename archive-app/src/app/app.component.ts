@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject, isDevMode } from '@angular/core';
 import { KioskService } from './kiosk.service';
 
 @Component({
@@ -16,9 +16,17 @@ export class AppComponent {
 	kioskMode:boolean 
 	
 	constructor(
-			private kioskService: KioskService
+			private kioskService: KioskService,
+	    @Inject('Window') private window: Window
 	) {
 		this.kioskMode = kioskService.getKioskMode()
+		if (this.kioskMode && !isDevMode()) {
+			window.oncontextmenu = (event) => {
+		    event.preventDefault();
+		    event.stopPropagation();
+		    return false;
+      }
+		}
 	}
 	closeResearchWarning() {
 		// TODO persist

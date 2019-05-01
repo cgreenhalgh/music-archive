@@ -38,7 +38,12 @@ import { AppRoutingModule } from './app-routing.module';
     HttpModule,
     NgbModule.forRoot()
   ],
-  providers: [RecordsService, LinkappsService, KioskService],
+  providers: [
+    RecordsService, 
+    LinkappsService, 
+    KioskService,
+    { provide: 'Window', useValue: window }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
